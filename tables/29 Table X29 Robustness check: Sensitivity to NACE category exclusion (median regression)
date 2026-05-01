@@ -1,0 +1,28 @@
+
+
+OM	Coefficient	Std. err.	t-stat	P>t	[95% conf. interval]	
+EQUITY	-0.0024124	0.0007747	-3.11	0.002	-0.0039309	-0.0008939
+						
+EMP						
+  1-4	0.0106512	0.0025382	4.2	0	0.0056764	0.0156261
+  5-19	0.0088649	0.0033859	2.62	0.009	0.0022285	0.0155013
+  20+	0.0040838	0.0059769	0.68	0.494	-0.0076311	0.0157986
+						
+ZIP						
+  Nearby (1-100)	-0.0136195	0.0025751	-5.29	0	-0.0186668	-0.0085723
+  Moderate (101-1000)	-0.0197649	0.0031911	-6.19	0	-0.0260195	-0.0135104
+  Far (1001+)	-0.0304858	0.0035571	-8.57	0	-0.0374578	-0.0235138
+  Missing	-0.0355282	0.0048359	-7.35	0	-0.0450067	-0.0260497
+						
+GENDER						
+  Male	0.0170616	0.0028956	5.89	0	0.0113861	0.022737
+  Uncertain	-0.0087728	0.0042981	-2.04	0.041	-0.0171972	-0.0003485
+						
+SUST	-0.0656667	0.0087991	-7.46	0	-0.0829132	-0.0484201
+						
+YEAR						
+  2019	0.0013595	0.0020279	0.67	0.503	-0.0026153	0.0053343
+						
+_cons	0.0554566	0.0088324	6.28	0	0.0381448	0.0727683
+
+Note. Median regressions comparing three specifications are run: excluding NACE P, U and missing NACE codes (main model, shown in Table 16), including all firms regardless of NACE, and excluding the NACE predictor entirely (shown here). Same controls as the main model (Table 16). * p < .05, ** p < .01, *** p < .001.
