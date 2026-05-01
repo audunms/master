@@ -20,13 +20,12 @@ NACE_section                                        |
   M Real estate                                     |   3,077       4,160
   N Professional, scientific and technical services |   1,780       2,096
   O Administration and support                      |     666         711
-  P Public administration and defence               |       3           8
   Q Education                                       |     323         349
   R Human health and social work activities         |     499         552
   S Arts, sports and recreation                     |     350         372
   T Other service activities                        |     416         450
-  U Households as employers                         |       0           0
-  Total                                             |  13,193      17,155
+  Total                                             |  13,190      17,147
 -------------------------------------------------------------------------
 
-Note. Values represent the number of firms, the number of firms where operating margin is calculated, the number of firms where pretax margin is calculated, per NACE level 1 group, for the fifth year in operation. Only companies registered in 2019 are included. Sorted by NACE category.
+
+Note. Values represent the number of firms, the number of firms where operating margin is calculated, the number of firms where pretax margin is calculated, per NACE level 1 group, for the fifth year in operation. Only companies registered in 2019 are included. Sorted by NACE category. NACE P, U and missing excluded.
