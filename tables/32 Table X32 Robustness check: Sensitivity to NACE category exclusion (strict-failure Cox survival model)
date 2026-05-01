@@ -1,26 +1,12 @@
 
+------------------------------------------------------------------------------------------
+                                (1)                       (2)                       (3)   
+             Model 1 (NACE controls)    Model 2 (Missing NACE)     Model 3 (no NACE)   
+------------------------------------------------------------------------------------------
+1.SFACT_bin                   0.675**                   0.675**                   0.592***
+                      [0.507,0.899]             [0.507,0.899]             [0.448,0.782]   
+------------------------------------------------------------------------------------------
+N                             60120                     60164                     60164   
+------------------------------------------------------------------------------------------
 
-_t	Haz. ratio	Std. err.	z	P>z	[95% conf. interval]	
-EQUITY	0.668	0.0110758	-24.35	0	0.6463101	0.6897339
-						
-EMP						
-  1-4	0.037	0.0055552	-22.00	0	0.0276609	0.0497509
-  5-19	0.023	0.0059796	-14.57	0	0.0139273	0.0383837
-  20+	0.006	0.0061772	-5.09	0	0.0008698	0.0438585
-						
-ZIP						
-  Nearby (1-100)	2.667	0.0974051	26.86	0	2.482929	2.865076
-  Moderate (101-1000)	2.694	0.1129702	23.63	0	2.480998	2.924331
-  Far (1001+)	2.757	0.1262758	22.14	0	2.520176	3.015833
-  Missing	4.932	0.2090845	37.65	0	4.539091	5.35963
-						
-GENDER						
-  Male	0.911	0.0385063	-2.21	0.027	0.8382373	0.9893523
-  Uncertain	2.287	0.1112532	17.01	0	2.079515	2.51628
-						
-SUST	0.592	0.0840894	-3.69	0	0.4476971	0.7816024
-						
-RegYear						
-2019	0.981	0.0256815	-0.73	0.465	0.9320057	1.032719
-
-Note. Cox proportional hazards models using the strict failure definition, comparing three specifications: excluding NACE P, U, and firms with missing NACE codes (n = 60,120; full model, identical to Table 13); including all 44 excluded firms (n = 60,164; Missing NACE entered as a separate category); and excluding NACE as a predictor entirely (n = 60,164; shown here). Coefficients shown are for the third specification. Same non-NACE controls as the full model. Strict failures = 5,850. 
+Note. Cox proportional hazards models using the strict failure definition, comparing three specifications: excluding NACE P, U, and firms with missing NACE codes (n = 60,120; full model); including all 44 excluded firms (n = 60,164; Missing NACE entered as a separate category); and excluding NACE as a predictor entirely (n = 60,164). Same non-NACE controls as the full model.
