@@ -1,0 +1,35 @@
+
+
+_t	Haz. ratio	Std. err.	z	P>z	[95% conf. interval]	
+SUST_c						
+  1	0.847	0.1041974	-1.35	0.178	0.6657144	1.078128
+  2	1.076	0.1583266	0.49	0.621	0.8059739	1.435249
+  3	0.956	0.1333101	-0.32	0.748	0.7276156	1.256708
+  4	1.165	0.2455461	0.72	0.469	0.7707141	1.76085
+  5	1.172	0.8292036	0.22	0.822	0.2928851	4.689881
+						
+NACE						
+  A Agriculture, forestry and fishing	0.792	0.0538118	-3.43	0.001	0.6931321	0.9046945
+  B Mining and extraction	0.799	0.1423921	-1.26	0.207	0.563063	1.132661
+  C Manufacturing	0.984	0.0522162	-0.31	0.756	0.8864257	1.091479
+  D Electricity and gas supply	0.754	0.1066848	-1.99	0.046	0.5717857	0.9953575
+  E Water and waste	0.940	0.1640924	-0.35	0.724	0.6678929	1.323739
+  F Construction	1.541	0.0460333	14.47	0	1.453045	1.633595
+  G Retail and wholesale	1.340	0.041592	9.42	0	1.260658	1.423796
+  H Transport and storage	1.412	0.0656921	7.41	0	1.288656	1.546521
+  I Accommodation and hospitality	1.613	0.0622252	12.40	0	1.495968	1.740119
+  J Publishing and content production	0.854	0.0693365	-1.94	0.052	0.7283397	1.001282
+  K Telecommunication and information technology	0.981	0.0414014	-0.46	0.645	0.9028765	1.065352
+  L Finance and insurance	0.433	0.0297543	-12.18	0	0.3788513	0.495838
+  M Real estate	0.577	0.0187356	-16.92	0	0.5419161	0.6154076
+  N Professional, scientific and technical services	0.873	0.0287605	-4.11	0	0.818689	0.9315063
+  O Administration and support	1.240	0.0501075	5.33	0	1.145862	1.342486
+  Q Education	0.964	0.0609934	-0.59	0.558	0.8512069	1.09091
+  R Human health and social work activities	0.950	0.0501733	-0.97	0.333	0.8567178	1.053745
+  S Arts, sports and recreation	0.861	0.0542527	-2.37	0.018	0.7612354	0.9744427
+  T Other service activities	0.896	0.0521027	-1.89	0.059	0.799594	1.004275
+						
+YEAR						
+  2019	0.968	0.0150929	-2.10	0.035	0.9385699	0.9977421
+
+Note. Cox proportional hazards model estimating the effect of sustainability factors (SFACT 0-5) on five-year firm survival, controlling for NACE category and registration year. NACE P and U excluded. N = 60,120. 
