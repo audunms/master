@@ -1,8 +1,9 @@
 # master
 Code and Stata output related to master thesis by Audun Minnesjord Solheim
 
-This repository has three files:
+This repository has several supplementary files for the master thesis. Files are organized in different folders:
 
-1. Stata code. Here is the complete Stata code used in the thesis. It can be run in one go.
-2. Stata log. Here is the complete Stata log from running the code, including both the code itself and the output.
-3. Verbose Stata log. This is an extended version of the complete Stata code where also iteration log is included ("set iterlog off" is NOT set, on by default).
+1. #Stata#. Here is the complete Stata code used in the thesis, as well as the complete Stata output from running the Stata code. The code can be run in one go. 
+2. #Tables". Additional tables not included in the main thesis document.
+3. #Figures#. Additional figures not included in the main thesis document.
+4. #Source data#. The source data, from Proff and The Brønnøysund Register Centre, used in the thesis.
