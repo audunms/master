@@ -1,0 +1,46 @@
+
+
+SUST	Coefficient	Std. err.	z	P>z	[95% conf. interval]	
+GENDER						
+  Male	-0.1092972	0.1114772	-0.98	0.327	-0.3277884	0.1091941
+  Uncertain	-0.5147526	0.1791884	-2.87	0.004	-0.8659556	-0.1635497
+						
+EQUITY	0.0141833	0.0281988	0.50	0.615	-0.0410853	0.0694518
+						
+EMP						
+  1-4	-0.0265264	0.1070672	-0.25	0.804	-0.2363742	0.1833215
+  5-19	-0.210756	0.1504164	-1.40	0.161	-0.5055667	0.0840548
+  20+	-0.7875888	0.3070335	-2.57	0.01	-1.389363	-0.1858142
+						
+ZIP						
+  Nearby (1-100)	0.356512	0.1072735	3.32	0.001	0.1462598	0.5667641
+  Moderate (101-1000)	0.616749	0.1191355	5.18	0	0.3832477	0.8502504
+  Far (1001+)	0.658418	0.1251636	5.26	0	0.4131018	0.9037342
+  Missing	0.8444675	0.144466	5.85	0	0.5613193	1.127616
+						
+NACE						
+  A Agriculture, forestry and fishing	2.074869	0.2892008	7.17	0	1.508046	2.641692
+  B Mining and extraction	1.355682	0.7435157	1.82	0.068	-0.1015824	2.812946
+  C Manufacturing	2.227654	0.257328	8.66	0	1.7233	2.732007
+  D Electricity and gas supply	5.262072	0.2493133	21.11	0	4.773427	5.750717
+  E Water and waste	4.836913	0.2855548	16.94	0	4.277236	5.39659
+  F Construction	0.572553	0.2655522	2.16	0.031	0.0520803	1.093026
+  G Retail and wholesale	1.521474	0.2338134	6.51	0	1.063209	1.97974
+  H Transport and storage	0.099393	0.4601979	0.22	0.829	-0.8025784	1.001364
+  I Accommodation and hospitality	-0.3282827	0.4617585	-0.71	0.477	-1.233313	0.5767473
+  J Publishing and content production	0.7351394	0.4963192	1.48	0.139	-0.2376283	1.707907
+  K Telecommunication and information technology	1.009278	0.2840768	3.55	0	0.4524976	1.566058
+  L Finance and insurance	-0.6837144	0.6145049	-1.11	0.266	-1.888122	0.5206931
+  M Real estate	-1.246729	0.3573215	-3.49	0	-1.947066	-0.5463919
+  N Professional, scientific and technical services	2.328511	0.2209176	10.54	0	1.89552	2.761501
+  O Administration and support	0.6391568	0.3219342	1.99	0.047	0.0081773	1.270136
+  Q Education	0	(empty)				
+  R Human health and social work activities	0.968178	0.3968599	2.44	0.015	0.1903469	1.746009
+  S Arts, sports and recreation	-1.061714	0.7397549	-1.44	0.151	-2.511607	0.3881786
+  T Other service activities	-0.6867445	0.7386405	-0.93	0.353	-2.134453	0.7609643
+T Other service activities	-0.1779393	0.5456394	-0.33	0.744	-1.247373	0.8914943
+U Households as employers	0	(empty)				
+						
+_cons	-6.004461	0.3828797	-15.68	0	-6.754891	-5.25403
+
+Note. Logistic regression with SFACT_bin as dependent variable. Coefficients shown. Controls: log equity, employee category, zip distance, NACE section. N = 60,120. 
