@@ -1,0 +1,26 @@
+
+
+Excluded NACE	Sustainable firms dropped	HR	z	p	n	Failures
+None (baseline)	0	0.845	-2.23	0.025	60,120	16,679
+X Undefined	23	0.848	-2.14	0.032	53,077	14,787
+  A Agriculture, forestry and fishing	26	0.833	-2.37	0.018	59,034	16,434
+  B Mining and extraction	2	0.848	-2.18	0.029	59,979	16,647
+  C Manufacturing	48	0.885	-1.59	0.113	58,528	16,240
+  D Electricity and gas supply	108	0.866	-1.85	0.064	59,863	16,622
+  E Water and waste	40	0.842	-2.23	0.025	59,989	16,645
+  F Construction	39	0.859	-1.94	0.052	53,180	13,907
+  G Retail and wholesale	102	0.797	-2.66	0.008	53,686	14,358
+  H Transport and storage	6	0.844	-2.24	0.025	58,476	16,066
+  I Accommodation and hospitality	6	0.825	-2.52	0.012	57,577	15,633
+  J Publishing and content production	5	0.845	-2.23	0.025	59,440	16,514
+  K Telecommunication and information technology	28	0.842	-2.23	0.026	57,216	15,879
+  L Finance and insurance	3	0.847	-2.20	0.028	58,283	16,437
+  M Real estate	12	0.846	-2.21	0.027	48,575	14,766
+  N Professional, scientific and technical services	245	0.841	-1.87	0.062	52,767	14,853
+  O Administration and support	17	0.842	-2.25	0.024	57,420	15,770
+  Q Education	9	0.848	-2.17	0.03	59,064	16,391
+  R Human health and social work activities	2	0.847	-2.21	0.027	58,456	16,236
+  S Arts, sports and recreation	2	0.847	-2.20	0.028	58,942	16,388
+  T Other service activities	4	0.844	-2.25	0.025	58,728	16,328
+
+  Note. Hazard ratios from Cox proportional hazards regression, each estimated with one NACE section excluded. HR < 1 indicates lower exit risk. Same controls as the main models. Sustainable firms dropped shows the number of sustainable firms removed with each exclusion. NACE P and U excluded from all specifications.
