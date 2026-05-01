@@ -1,0 +1,26 @@
+
+
+Excluded NACE	Sustainable firms dropped	HR	z	p	n	Failures
+None (baseline)	0	0.675	-2.69	0.007	60,120	5,850
+X Undefined	23	0.687	-2.56	0.01	53,077	5,625
+  A Agriculture, forestry and fishing	26	0.649	-2.86	0.004	59,034	5,783
+  B Mining and extraction	2	0.678	-2.66	0.008	59,979	5,841
+  C Manufacturing	48	0.728	-2.1	0.036	58,528	5,653
+  D Electricity and gas supply	108	0.68	-2.59	0.01	59,863	5,842
+  E Water and waste	40	0.716	-2.28	0.022	59,989	5,838
+  F Construction	39	0.686	-2.44	0.015	53,180	4,330
+  G Retail and wholesale	102	0.608	-2.83	0.005	53,686	4,802
+  H Transport and storage	6	0.68	-2.63	0.009	58,476	5,537
+  I Accommodation and hospitality	6	0.602	-3.26	0.001	57,577	5,133
+  J Publishing and content production	5	0.662	-2.79	0.005	59,440	5,813
+  K Telecommunication and information technology	28	0.669	-2.7	0.007	57,216	5,635
+  L Finance and insurance	3	0.676	-2.68	0.007	58,283	5,814
+  M Real estate	12	0.677	-2.67	0.008	48,575	5,622
+  N Professional, scientific and technical services	245	0.697	-2.16	0.03	52,767	5,415
+  O Administration and support	17	0.69	-2.53	0.011	57,420	5,477
+  Q Education	9	0.681	-2.62	0.009	59,064	5,791
+  R Human health and social work activities	2	0.676	-2.68	0.007	58,456	5,774
+  S Arts, sports and recreation	2	0.676	-2.68	0.007	58,942	5,770
+  T Other service activities	4	0.679	-2.64	0.008	58,728	5,655
+
+  Note. Hazard ratios from Cox proportional hazards regression using the strict failure definition, each estimated with one NACE section excluded. HR < 1 indicates lower involuntary failure risk for sustainability-oriented firms. Same controls as the main strict-failure model. Sustainable firms dropped shows the number of sustainable firms removed with each exclusion. NACE P and U excluded from all specifications.
