@@ -64,3 +64,13 @@ N Professional, scientific and technical services  |   .4575145   1.413111     0
                                            sigma_e |  47.506058
                                                rho |  .38466756   (fraction of variance due to u_i)
 --------------------------------------------------------------------------------------------------------------------
+
+testparm i.SFACT_bin#i.Year
+
+ ( 1)  1.SFACT_bin#2.Year = 0
+ ( 2)  1.SFACT_bin#3.Year = 0
+ ( 3)  1.SFACT_bin#4.Year = 0
+ ( 4)  1.SFACT_bin#5.Year = 0
+
+           chi2(  4) =    1.29
+         Prob > chi2 =    0.8628
