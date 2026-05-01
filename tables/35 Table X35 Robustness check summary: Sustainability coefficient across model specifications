@@ -1,0 +1,26 @@
+
+
+Specification	Outcome	Coef./HR	95% CI	p	n
+Main Cox, strict failure (SUST binary)	Exit	0.675	[0.507, 0.899]	.007	60,120
+Main Cox, all-cause (SUST binary)	Exit	0.845	[0.729, 0.980]	.025	60,120
+NACE-stratified Cox, strict (Table X23)	Exit	0.673	[0.505, 0.897]	.007	60,120
+Cox, SFACT ≥ 2, strict failure	Exit	0.638	[0.432, 0.942]	.024	60,120
+Cox, SFACT ≥ 2, all-cause	Exit	0.892	[0.742, 1.072]	.224	60,120
+Cox, strict failure, no NACE predictor	Exit	0.592	[0.448, 0.782]	<.001	60,164
+Weibull PH, strict failure	Exit	0.658	[0.494, 0.877]	.004	60,120
+Weibull PH, all-cause	Exit	0.832	[0.718, 0.965]	.015	60,120
+Exponential PH, strict failure	Exit	0.671	[0.504, 0.894]	.006	60,120
+Exponential PH, all-cause	Exit	0.840	[0.725, 0.974]	.021	60,120
+Logit, strict failure	Strict 5-year survival	+2.83 pp	[+1.17, +4.49]	.001	60,120
+Probit, strict failure	Strict 5-year survival	+2.72 pp	[+1.10, +4.35]	.001	60,120
+Logit (Table X24)	5-year survival	+3.5 pp	[+0.64, +6.32]	.016	60,120
+Probit (Table X25)	5-year survival	+3.2 pp	[+0.30, +6.05]	.030	60,120
+Main median regression (Table 16)	Operating margin	-6.7 pp	[-9.4, -4.1]	<.001	39,069
+Median regression, SFACT ≥ 2	Operating margin	-9.1 pp	[-12.5, -5.8]	<.001	39,069
+OLS, robust SE	Operating margin	-2.6 pp	[-6.5, 1.4]	.201	39,069
+Huber robust regression	Operating margin	-4.4 pp	[-6.5, -2.2]	<.001	39,069
+Median regression, survived firms only	Operating margin	-6.3 pp	[-8.8, -3.8]	<.001	31,496
+Pretax margin, Y5 2019 cohort (Table A9)	Pretax margin	-11.2 pp	[-17.0, -5.4]	<.001	~14,500
+Year 1 other-income share (OLS robust)	Share of non-sales revenue	13.60pp	[+10.6, +16.6]	<.001	39,069
+
+Note. All specifications include the full control set: log registered share capital, employee category, zip distance, chair gender, NACE section, registration year (except cohort-stratified and pretax, which have cohort-specific adjustments). NACE P and U excluded. A random-effects panel regression with sustainability-by-year interactions shows no differential effect across years (Wald χ²(4) = 1.29, p = .863).
