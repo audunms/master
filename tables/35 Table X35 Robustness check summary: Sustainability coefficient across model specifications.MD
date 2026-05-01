@@ -1,4 +1,4 @@
-
+<img width="556" height="439" alt="Image" src="https://github.com/user-attachments/assets/8466a3c9-b8b7-49b4-98cc-81d8e4ce4edf" />
 
 Specification	Outcome	Coef./HR	95% CI	p	n
 Main Cox, strict failure (SUST binary)	Exit	0.675	[0.507, 0.899]	.007	60,120
