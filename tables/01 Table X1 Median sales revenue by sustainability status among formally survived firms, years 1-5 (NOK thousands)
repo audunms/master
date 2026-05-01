@@ -1,0 +1,13 @@
+
+
+SUST	Y1Rev	Y2Rev	Y3Rev	Y4Rev	Y5Rev
+0	24475	25470	25618	25382	24499
+	960	1074	1242	1327	1339
+					
+1	342	362	371	369	350
+	398	513	847	1053	1420
+					
+Total	24817	25832	25989	25751	24849
+	952	1066	1238	1323	1340
+
+Note. First row per group shows number of observations with non-missing sales revenue; second row shows median sales revenue in NOK thousands. Restricted to firms that formally survived the full five-year observation period (n = 43,441).
