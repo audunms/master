@@ -7,3 +7,5 @@ This repository has several supplementary files for the master thesis. Files are
 2. **Tables**. Additional tables not included in the main thesis document.
 3. **Figures**. Additional figures not included in the main thesis document.
 4. **Source data**. The source data, from Proff and The Brønnøysund Register Centre, used in the thesis.
+
+All tables, figures and Stata output are based on own calculations and data from The Brønnøysund Register Centre and Proff AS.
