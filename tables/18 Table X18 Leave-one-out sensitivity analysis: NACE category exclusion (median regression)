@@ -1,0 +1,26 @@
+
+
+Excluded NACE	Sustainable firms dropped	Coeff	t-stat	p	n
+None (baseline)	0	-0.067	-5.06	0	39,069
+  X Undefined	23	-0.067	-5.21	0	37,565
+  A Agriculture, forestry and fishing	26	-0.062	-4.48	0	38,221
+  B Mining and extraction	2	-0.068	-5.08	0	38,977
+  C Manufacturing	48	-0.062	-4.36	0	37,873
+  D Electricity and gas supply	108	-0.069	-4.95	0	38,892
+  E Water and waste	40	-0.070	-5.13	0	38,974
+  F Construction	39	-0.077	-5.01	0	34,039
+  G Retail and wholesale	102	-0.081	-5.18	0	34,256
+  H Transport and storage	6	-0.069	-5.09	0	37,857
+  I Accommodation and hospitality	6	-0.068	-4.93	0	37,189
+  J Publishing and content production	5	-0.067	-5.04	0	38,549
+  K Telecommunication and information technology	28	-0.065	-4.8	0	37,046
+  L Finance and insurance	3	-0.067	-5.15	0	38,682
+  M Real estate	12	-0.064	-6.79	0	31,568
+  N Professional, scientific and technical services	245	-0.036	-2.04	0.042	33,651
+  O Administration and support	17	-0.070	-5.12	0	37,039
+  Q Education	9	-0.067	-5.01	0	38,206
+  R Human health and social work activities	2	-0.069	-5.07	0	37,702
+  S Arts, sports and recreation	2	-0.067	-5.01	0	38,094
+  T Other service activities	4	-0.068	-5.03	0	37,931
+
+Note. Coefficients from median regression at the 50th percentile. Dependent variable: aggregated operating margin (years 1-5). Same controls as the main model. Sustainable firms dropped shows the number of sustainable firms removed with each exclusion. NACE P and U excluded from all specifications.
