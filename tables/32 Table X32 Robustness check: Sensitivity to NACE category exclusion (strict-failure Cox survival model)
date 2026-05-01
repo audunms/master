@@ -6,7 +6,7 @@
 1.SUST                   0.675**                   0.675**                   0.592***
                       [0.507,0.899]             [0.507,0.899]             [0.448,0.782]   
 ------------------------------------------------------------------------------------------
-N                             60120                     60164                     60164   
+n                             60120                     60164                     60164   
 ------------------------------------------------------------------------------------------
 
 Note. Cox proportional hazards models using the strict failure definition, comparing three specifications: excluding NACE P, U, and firms with missing NACE codes (n = 60,120; full model); including all 44 excluded firms (n = 60,164; Missing NACE entered as a separate category); and excluding NACE as a predictor entirely (n = 60,164). Same non-NACE controls as the full model.
