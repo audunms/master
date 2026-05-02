@@ -1,3 +1,5 @@
+| | | |
+|---|---|---|
 | Status | Sum driftsinnt., 2020 | Andre driftskostnader, 2023 |
 | Orgnr | Sum driftsinnt., 2019 | Andre driftskostnader, 2022 |
 | Juridisk selskapsnavn | Andre driftsinnt., 2023 | Andre driftskostnader, 2021 |
