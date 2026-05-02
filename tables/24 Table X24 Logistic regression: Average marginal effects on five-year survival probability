@@ -1,48 +1,60 @@
+logit Exists_bin ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
 
+--------------------------------------------------------------------------------------------------------------------
+                                        Exists_bin | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------------------------------+----------------------------------------------------------------
+                                          ln_aksje |   .0938108   .0083445    11.24   0.000     .0774559    .1101657
+                                                   |
+                                           emp_cat |
+                                              1-4  |   2.610307   .0506367    51.55   0.000     2.511061    2.709554
+                                             5-19  |   2.906175   .0714953    40.65   0.000     2.766047    3.046303
+                                              20+  |   2.938327   .1282308    22.91   0.000        2.687    3.189655
+                                                   |
+                                           zip_cat |
+                                   Nearby (1-100)  |  -.8322696   .0264551   -31.46   0.000    -.8841207   -.7804185
+                              Moderate (101-1000)  |  -.8843281   .0314694   -28.10   0.000    -.9460071   -.8226492
+                                      Far (1001+)  |  -.9779762   .0342975   -28.51   0.000    -1.045198   -.9107542
+                                          Missing  |  -1.212673   .0427032   -28.40   0.000     -1.29637   -1.128977
+                                                   |
+                                  Chair_gender_cat |
+                                             Male  |   .2528092    .030074     8.41   0.000     .1938653    .3117531
+                                        Uncertain  |   -.134539   .0427883    -3.14   0.002    -.2184025   -.0506755
+                                                   |
+                                       1.SFACT_bin |   .2238921    .096471     2.32   0.020     .0348125    .4129717
+                                                   |
+                                      NACE_section |
+              A Agriculture, forestry and fishing  |  -.1750944   .0824786    -2.12   0.034    -.3367494   -.0134393
+                          B Mining and extraction  |   .1195145   .2161647     0.55   0.580    -.3041606    .5431896
+                                  C Manufacturing  |  -.4576969   .0688969    -6.64   0.000    -.5927323   -.3226615
+                     D Electricity and gas supply  |   .1952572   .1667304     1.17   0.242    -.1315285    .5220428
+                                E Water and waste  |  -.2472018   .2210255    -1.12   0.263    -.6804038    .1860001
+                                   F Construction  |  -1.164476   .0407694   -28.56   0.000    -1.244382   -1.084569
+                           G Retail and wholesale  |   -.685727   .0407192   -16.84   0.000    -.7655353   -.6059188
+                          H Transport and storage  |  -.8648987   .0651967   -13.27   0.000     -.992682   -.7371154
+                  I Accommodation and hospitality  |  -1.064786   .0570132   -18.68   0.000     -1.17653   -.9530426
+              J Publishing and content production  |  -.0740216   .1004941    -0.74   0.461    -.2709865    .1229433
+   K Telecommunication and information technology  |  -.2261879   .0533236    -4.24   0.000    -.3307002   -.1216757
+                          L Finance and insurance  |   .8175114   .0759246    10.77   0.000     .6687018    .9663209
+                                    M Real estate  |   .7087691   .0382557    18.53   0.000     .6337893    .7837489
+N Professional, scientific and technical services  |  -.2169774    .040765    -5.32   0.000    -.2968753   -.1370795
+                     O Administration and support  |  -.6074428   .0534281   -11.37   0.000    -.7121599   -.5027257
+                                      Q Education  |  -.4535892   .0822037    -5.52   0.000    -.6147056   -.2924729
+        R Human health and social work activities  |  -.5462579   .0700413    -7.80   0.000    -.6835362   -.4089795
+                    S Arts, sports and recreation  |  -.1906602    .078848    -2.42   0.016    -.3451994    -.036121
+                       T Other service activities  |  -.4027886   .0772134    -5.22   0.000    -.5541242   -.2514531
+                                                   |
+                                           RegYear |
+                                             2019  |  -.0066265    .020542    -0.32   0.747    -.0468881     .033635
+                                                   |
+                                             _cons |    .135624   .0987704     1.37   0.170    -.0579624    .3292105
+--------------------------------------------------------------------------------------------------------------------
+Note. Average marginal effects from logistic regression. Each value (dy/dx) represents the average change in the predicted probability of five-year survival associated with a one-unit change in the predictor (continuous variables) or a shift from the reference category (categorical variables). Reference categories: no employees; same zip code; female chair; non-sustainable (SFACT = 0); X Undefined for NACE. NACE P and U excluded. N = 60,120. 
 
-	Delta-method					
-	dy/dx   	std. err.	z	P>z	[95% conf. interval]	
-EQUITY	0.0150701	0.0013355	11.28	0.000	0.0124525	0.0176876
-						
-EMP						
-  1-4	0.3156108	0.0031421	100.45	0.000	0.3094523	0.3217692
-  5-19	0.3275411	0.0033135	98.85	0.000	0.3210469	0.3340354
-  20+	0.3286625	0.0049046	67.01	0.000	0.3190497	0.3382753
-						
-ZIP						
-  Nearby (1-100)	-0.1352049	0.0044016	-30.72	0.000	-0.1438319	-0.1265779
-  Moderate (101-1000)	-0.1447114	0.005428	-26.66	0.000	-0.15535	-0.1340727
-  Far (1001+)	-0.1620264	0.0060429	-26.81	0.000	-0.1738702	-0.1501825
-  Missing	-0.2063766	0.0079394	-25.99	0.000	-0.2219376	-0.1908156
-						
-GENDER						
-  Male	0.041549	0.0050501	8.23	0.000	0.031651	0.051447
-  Uncertain	-0.0231813	0.007401	-3.13	0.002	-0.037687	-0.0086756
-						
-SUST	0.0348101	0.0144792	2.40	0.016	0.0064314	0.0631888
-						
-NACE						
-  A Agriculture, forestry and fishing	-0.0289305	0.0139395	-2.08	0.038	-0.0562515	-0.0016095
-  B Mining and extraction	0.0186988	0.0330381	0.57	0.571	-0.0460546	0.0834523
-  C Manufacturing	-0.0789716	0.0123833	-6.38	0.000	-0.1032425	-0.0547008
-  D Electricity and gas supply	0.0300812	0.0247076	1.22	0.223	-0.0183448	0.0785072
-  E Water and waste	-0.0413347	0.0383837	-1.08	0.282	-0.1165654	0.033896
-  F Construction	-0.2146643	0.0072967	-29.42	0.000	-0.2289656	-0.200363
-  G Retail and wholesale	-0.121679	0.0072206	-16.85	0.000	-0.1358312	-0.1075267
-  H Transport and storage	-0.1561898	0.0122863	-12.71	0.000	-0.1802705	-0.1321092
-  I Accommodation and hospitality	-0.1951815	0.0107047	-18.23	0.000	-0.2161623	-0.1742006
-  J Publishing and content production	-0.0120161	0.0164985	-0.73	0.466	-0.0443525	0.0203203
-  K Telecommunication and information technology	-0.037692	0.0090381	-4.17	0.000	-0.0554064	-0.0199776
-  L Finance and insurance	0.1089724	0.0086963	12.53	0.000	0.0919279	0.1260168
-  M Real estate	0.0970877	0.0053513	18.14	0.000	0.0865992	0.1075761
-  N Professional, scientific and technical services	-0.0361025	0.0067985	-5.31	0.000	-0.0494274	-0.0227777
-  O Administration and support	-0.1068319	0.0096896	-11.03	0.000	-0.1258231	-0.0878407
-  Q Education	-0.0782189	0.0148533	-5.27	0.000	-0.1073308	-0.0491069
-  R Human health and social work activities	-0.095355	0.0127908	-7.45	0.000	-0.1204245	-0.0702855
-  S Arts, sports and recreation	-0.0315852	0.0133771	-2.36	0.018	-0.0578038	-0.0053665
-  T Other service activities	-0.0689656	0.0137843	-5.00	0.000	-0.0959824	-0.0419488
-						
-YEAR						
-  2019	-0.0010645	0.0032997	-0.32	0.747	-0.0075317	0.0054028
-
-  Note. Average marginal effects from logistic regression. Each value (dy/dx) represents the average change in the predicted probability of five-year survival associated with a one-unit change in the predictor (continuous variables) or a shift from the reference category (categorical variables). Reference categories: no employees; same zip code; female chair; non-sustainable (SFACT = 0); X Undefined for NACE. NACE P and U excluded. N = 60,120. 
+margins, dydx(SFACT_bin) post
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ 1.SFACT_bin |   .0348101   .0144792     2.40   0.016     .0064314    .0631888
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
