@@ -2,7 +2,7 @@
 
 | Abbreviation | Definition |
 |--------------|------------|
-| Statistical Methods and Analytical Techniques |  |
+| **Statistical Methods and Analytical Techniques** |  |
 | 2SLS | Two-stage least squares regression |
 | 3SLS | Three-stage least squares regression |
 | COX | Cox proportional hazard survival model |
@@ -37,10 +37,10 @@
 | S&P GMI | S&P Global Market Intelligence LLC |
 | VWP | Variable weights with penalty |
 | Z-score | Altman Z-score |
-| Variables |  |
+| **Variables** |  |
 | CEP | Carbon emission performance |
 | LTEV | Long-term enterprise value |
-| Databases and Data Sources |  |
+| **Databases and Data Sources** |  |
 | ASSET4 | Thomson Reuters ASSET4 |
 | CRSP | Center for Research in Security Prices |
 | DART | Data Analysis, Retrieval, and Transfer |
