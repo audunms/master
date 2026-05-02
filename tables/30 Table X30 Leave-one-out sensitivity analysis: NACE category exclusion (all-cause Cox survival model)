@@ -1,22 +1,22 @@
-Excluded NACE category                          AC HR     AC p      Strict HR  Strict p
-----------------------------------------------------------------------------------------
-X Undefined                                     0.848     0.032       0.687     0.010
-A Agriculture, forestry and fishing             0.833     0.018       0.649     0.004
-B Mining and extraction                         0.848     0.029       0.678     0.008
-C Manufacturing                                 0.885     0.113       0.728     0.036
-D Electricity and gas supply                    0.866     0.064       0.680     0.010
-E Water and waste                               0.842     0.025       0.716     0.022
-F Construction                                  0.859     0.052       0.686     0.015
-G Retail and wholesale                          0.797     0.008       0.608     0.005
-H Transport and storage                         0.844     0.025       0.680     0.009
-I Accommodation and hospitality                 0.825     0.012       0.602     0.001
-J Publishing and content production             0.845     0.025       0.662     0.005
-K Telecommunication and information technology  0.842     0.026       0.669     0.007
-L Finance and insurance                         0.847     0.028       0.676     0.007
-M Real estate                                   0.846     0.027       0.677     0.008
-N Professional, scientific and technical serv.  0.841     0.062       0.697     0.030
-O Administration and support                    0.842     0.024       0.690     0.011
-Q Education                                     0.848     0.030       0.681     0.009
-R Human health and social work activities       0.847     0.027       0.676     0.007
-S Arts, sports and recreation                   0.847     0.028       0.676     0.007
-T Other service activities                      0.844     0.025       0.679     0.008
+Excluded NACE category                          AC HR     AC p     
+-------------------------------------------------------------------
+X Undefined                                     0.848     0.032       
+A Agriculture, forestry and fishing             0.833     0.018       
+B Mining and extraction                         0.848     0.029       
+C Manufacturing                                 0.885     0.113       
+D Electricity and gas supply                    0.866     0.064       
+E Water and waste                               0.842     0.025       
+F Construction                                  0.859     0.052      
+G Retail and wholesale                          0.797     0.008       
+H Transport and storage                         0.844     0.025       
+I Accommodation and hospitality                 0.825     0.012      
+J Publishing and content production             0.845     0.025      
+K Telecommunication and information technology  0.842     0.026       
+L Finance and insurance                         0.847     0.028     
+M Real estate                                   0.846     0.027     
+N Professional, scientific and technical serv.  0.841     0.062      
+O Administration and support                    0.842     0.024      
+Q Education                                     0.848     0.030      
+R Human health and social work activities       0.847     0.027      
+S Arts, sports and recreation                   0.847     0.028      
+T Other service activities                      0.844     0.025       
