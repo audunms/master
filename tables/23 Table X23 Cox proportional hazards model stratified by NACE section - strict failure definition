@@ -1,26 +1,29 @@
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear, strata(NACE_section)
 
-
-_t	Haz. ratio	Std. err.	z	P>z	[95% conf. interval]	
-EQUITY	0.749	0.0121186	-17.89	0	0.7252142	0.7727261
-						
-EMP						
-  1-4	0.028	0.0041282	-23.96	0	0.0205199	0.036936
-  5-19	0.013	0.0034391	-16.70	0	0.0080045	0.022071
-  20+	0.003	0.0032194	-5.74	0	0.0004531	0.0228601
-						
-ZIP						
-  Nearby (1-100)	2.307	0.0851337	22.66	0	2.146134	2.480143
-  Moderate (101-1000)	2.284	0.0966439	19.53	0	2.102634	2.481905
-  Far (1001+)	2.456	0.1133089	19.48	0	2.24405	2.688818
-  Missing	4.054	0.1714314	33.10	0	3.731323	4.404092
-						
-GENDER						
-  Male	0.913	0.0394042	-2.11	0.035	0.8390912	0.9937371
-  Uncertain	1.595	0.0784199	9.50	0	1.448833	1.756709
-						
-SUST	0.673	0.0985085	-2.70	0.007	0.505434	0.8968945
-						
-YEAR						
-2019	1.024	0.0268991	0.90	0.366	0.9726437	1.078133
+--------------------------------------------------------------------------------------
+                  _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
+---------------------+----------------------------------------------------------------
+            ln_aksje |   .7485934   .0121186   -17.89   0.000     .7252142    .7727261
+                     |
+             emp_cat |
+                1-4  |   .0275304   .0041282   -23.96   0.000     .0205199     .036936
+               5-19  |   .0132916   .0034391   -16.70   0.000     .0080045     .022071
+                20+  |   .0032185   .0032194    -5.74   0.000     .0004531    .0228601
+                     |
+             zip_cat |
+     Nearby (1-100)  |   2.307102   .0851337    22.66   0.000     2.146134    2.480143
+Moderate (101-1000)  |   2.284412   .0966439    19.53   0.000     2.102634    2.481905
+        Far (1001+)  |   2.456388   .1133089    19.48   0.000      2.24405    2.688818
+            Missing  |   4.053775   .1714314    33.10   0.000     3.731323    4.404092
+                     |
+    Chair_gender_cat |
+               Male  |   .9131463   .0394042    -2.11   0.035     .8390912    .9937371
+          Uncertain  |   1.595361   .0784199     9.50   0.000     1.448833    1.756709
+                     |
+         1.SFACT_bin |   .6732912   .0985085    -2.70   0.007      .505434    .8968945
+                     |
+             RegYear |
+               2019  |   1.024031   .0268991     0.90   0.366     .9726437    1.078133
+--------------------------------------------------------------------------------------
 
 Note. Strict failure definition: only bankruptcy and forced dissolution count as exit events; 10,829 voluntary discontinuations are censored as survivors. Baseline hazard stratified by NACE section (no NACE coefficients shown). n = 60,120; strict failures = 5,850. Post-estimation Schoenfeld residual test (estat phtest): global χ²(12) = 60.65. Individual ρ violations are confined to EQUITY and the ZIP categories; the SUST, EMP, and GENDER coefficients satisfy the proportional-hazards assumption. 
