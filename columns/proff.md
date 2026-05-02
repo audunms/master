@@ -1,3 +1,4 @@
+**Columns present in Excel files from Proff AS.**
 | | | |
 |---|---|---|
 | Status | Sum driftsinnt., 2020 | Andre driftskostnader, 2023 |
