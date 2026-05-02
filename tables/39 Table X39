@@ -1,0 +1,32 @@
+logit far_chair i.SFACT_bin i.NACE_section, or
+
+--------------------------------------------------------------------------------------------------------------------
+                                         far_chair | Odds ratio   Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------------------------------+----------------------------------------------------------------
+                                       1.SFACT_bin |   1.422556   .1596256     3.14   0.002     1.141709    1.772487
+                                                   |
+                                      NACE_section |
+              A Agriculture, forestry and fishing  |    1.17746   .1354052     1.42   0.155     .9398528    1.475137
+                          B Mining and extraction  |   1.210395   .3565017     0.65   0.517     .6795472    2.155928
+                                  C Manufacturing  |   1.341501   .1264563     3.12   0.002       1.1152    1.613724
+                     D Electricity and gas supply  |     1.9418   .3579138     3.60   0.000      1.35304    2.786753
+                                E Water and waste  |    1.92148   .4815249     2.61   0.009     1.175774    3.140131
+                                   F Construction  |   .9545607    .061127    -0.73   0.468     .8419675    1.082211
+                           G Retail and wholesale  |   1.564458   .0927356     7.55   0.000      1.39286    1.757195
+                          H Transport and storage  |   1.499185   .1352996     4.49   0.000     1.256132    1.789267
+                  I Accommodation and hospitality  |   1.942969   .1410448     9.15   0.000     1.685292    2.240044
+              J Publishing and content production  |   1.846476   .2237543     5.06   0.000     1.456116    2.341486
+   K Telecommunication and information technology  |   1.907433   .1334686     9.23   0.000     1.662984    2.187813
+                          L Finance and insurance  |   1.003511   .0984668     0.04   0.972     .8279427    1.216309
+                                    M Real estate  |   1.629289   .0864853     9.20   0.000     1.468301    1.807929
+N Professional, scientific and technical services  |   1.281752   .0764435     4.16   0.000     1.140351    1.440687
+                     O Administration and support  |   1.273996   .1007352     3.06   0.002     1.091097    1.487554
+                                      Q Education  |   2.324384   .2198043     8.92   0.000     1.931143    2.797701
+        R Human health and social work activities  |   1.292191   .1214549     2.73   0.006     1.074784    1.553576
+                    S Arts, sports and recreation  |   1.473025   .1523785     3.74   0.000     1.202698    1.804112
+                       T Other service activities  |   1.150115   .1205155     1.33   0.182     .9365863    1.412326
+                                                   |
+                                             _cons |    .083427    .003727   -55.60   0.000     .0764328    .0910611
+--------------------------------------------------------------------------------------------------------------------
+
+Note. NACE U, P and missing excluded.
