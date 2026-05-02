@@ -21,7 +21,7 @@ Looking at Company C, “waste” (“avfall” in Norwegian) gives keyword hits
 Similarly, Company D gets keyword hits both in EGSS and own keywords for the word “waste”. For Company E, the word “organic” (“økologisk” in Norwegian) gives two hits due to the original Norwegian word (“økologiske”) contains both “øko”, the Norwegian word for “eco”, and “økologi”, the Norwegian word for “organic”. As for Company F, “forest” (“skog” in Norwegian) is found in both EGSS and own keywords.
 
 ---
-
+#Formulas
 ## Excel formulas used to identify possible sustainability-oriented startups
 
 ### Commands that map keywords (EGSS and own) and company objectives and activity descriptions
