@@ -8,4 +8,4 @@
 n                             60120                     60164                     60164   
 ------------------------------------------------------------------------------------------
 
-Note. Cox proportional hazards models comparing three specifications are run: excluding NACE P, U, and firms with missing NACE codes (n = 60,120; full model); including all 44 excluded firms (n = 60,164; Missing NACE entered as a separate category); and excluding NACE as a predictor entirely (n = 60,164;). Same non-NACE controls as the full model.
+Note. All-cause Cox: SUST hazard ratio across three NACE specifications (full controls; Missing-NACE category; no NACE), n = 60,164. Same non-NACE controls as the full model.
