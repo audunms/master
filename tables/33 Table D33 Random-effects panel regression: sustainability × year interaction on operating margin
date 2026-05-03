@@ -64,6 +64,7 @@ N Professional, scientific and technical services  |   .4575145   1.413111     0
                                            sigma_e |  47.506058
                                                rho |  .38466756   (fraction of variance due to u_i)
 --------------------------------------------------------------------------------------------------------------------
+Note. Random-effects panel: SUST × Year interaction on operating margin, n = 149,895 firm-years; firm-clustered SEs; tests whether the penalty varies by calendar year.
 
 testparm i.SFACT_bin#i.Year
 
