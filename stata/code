@@ -1,0 +1,1423 @@
+import excel "C:\Users\Audun_local\Desktop\Final\Proff Brreg merge complete - cleaned updated survdates.xlsx", sheet("Main") firstrow
+log using "C:\Users\Audun_local\Desktop\stata_output.log", replace text
+set more off
+set iterlog off
+set linesize 255
+
+display as text "Date: `c(current_date)'  Time: `c(current_time)'"
+display as text "Stata version: `c(stata_version)'"
+
+* ============================================
+* PRE-EXISTING VARIABLE CHECKS
+* ============================================
+capture confirm variable AggrOM
+if _rc {
+    display as error "Required variable AggrOM not found."
+    error 111
+}
+foreach v in Y1OM Y2OM Y3OM Y4OM Y5OM FOMY52019 {
+    capture confirm variable `v'
+    if _rc {
+        display as error "Required variable `v' not found."
+        error 111
+    }
+}
+
+* ============================================
+* RAW DATA CHECKS
+* ============================================
+count
+tab RegYear, missing
+
+* ============================================
+* VARIABLE CONSTRUCTION
+* ============================================
+
+destring NACE Aksjekapital Styrelederspostnr Fadrpostnr RegYear, replace force
+
+foreach var in salg2024 salg2023 salg2022 salg2021 salg2020 salg2019 {
+    capture destring `var', replace force
+}
+foreach var in driftsinnt2024 driftsinnt2023 driftsinnt2022 driftsinnt2021 driftsinnt2020 driftsinnt2019 {
+    capture destring `var', replace force
+}
+foreach var in andredrift2024 andredrift2023 andredrift2022 andredrift2021 andredrift2020 andredrift2019 {
+    capture destring `var', replace force
+}
+
+replace Antallansatte = "2" if strpos(Antallansatte, "til") > 0
+destring Antallansatte, replace force
+
+* Word counts
+gen word_count_act = wordcount(Activity)
+gen word_count_obj = wordcount(Company_objective)
+
+* Survival and sustainability
+replace NSR = "Active" if trim(NSR) == ""
+encode NSR, gen(Status_cat)
+gen Exists_bin = (missing(NSRY) | NSRY > 5)
+gen failed = (Exists_bin == 0)
+gen failed_strict = (failed == 1 & NSR != "Voluntarily discontinuation")
+gen SFACT_bin = (SFACT > 0)
+gen SFACT_high = (SFACT >= 2)
+gen SFACT_sq = SFACT^2
+
+* Registered share capital
+gen ln_aksje = ln(Aksjekapital)
+
+* Employee categories
+gen emp_cat = .
+replace emp_cat = 0 if Antallansatte == 0
+replace emp_cat = 1 if inrange(Antallansatte, 1, 4)
+replace emp_cat = 2 if inrange(Antallansatte, 5, 19)
+replace emp_cat = 3 if Antallansatte >= 20 & !missing(Antallansatte)
+label define emp_lbl 0 "No employees" 1 "1-4" 2 "5-19" 3 "20+"
+label values emp_cat emp_lbl
+
+* Zip code distance
+gen zip_diff = abs(Styrelederspostnr - Fadrpostnr)
+gen zip_cat = .
+replace zip_cat = 0 if zip_diff == 0
+replace zip_cat = 1 if zip_diff > 0 & zip_diff <= 100
+replace zip_cat = 2 if zip_diff > 100 & zip_diff <= 1000
+replace zip_cat = 3 if zip_diff > 1000 & !missing(zip_diff)
+replace zip_cat = 4 if missing(zip_diff)
+label define zip_lbl 0 "Same zip" 1 "Nearby (1-100)" 2 "Moderate (101-1000)" 3 "Far (1001+)" 4 "Missing"
+label values zip_cat zip_lbl
+
+* Board-chair gender
+gen Chair_gender = ""
+replace Chair_gender = "Male" if StyrelederM == "M" & StyrelederF == ""
+replace Chair_gender = "Female" if StyrelederF == "F" & StyrelederM == ""
+replace Chair_gender = "Uncertain" if (StyrelederM == "M" & StyrelederF == "F") | (StyrelederM == "" & StyrelederF == "")
+encode Chair_gender, gen(Chair_gender_cat)
+
+* NACE section mapping
+gen NACE_section = .
+replace NACE_section = 0  if NACE == 0
+replace NACE_section = 1  if inrange(NACE, 1, 3)
+replace NACE_section = 2  if inrange(NACE, 5, 9)
+replace NACE_section = 3  if inrange(NACE, 10, 33)
+replace NACE_section = 4  if NACE == 35
+replace NACE_section = 5  if inrange(NACE, 36, 39)
+replace NACE_section = 6  if inrange(NACE, 41, 43)
+replace NACE_section = 7  if inrange(NACE, 45, 47)
+replace NACE_section = 8  if inrange(NACE, 49, 53)
+replace NACE_section = 9  if inrange(NACE, 55, 56)
+replace NACE_section = 10 if inrange(NACE, 58, 60)
+replace NACE_section = 11 if inrange(NACE, 61, 63)
+replace NACE_section = 12 if inrange(NACE, 64, 66)
+replace NACE_section = 13 if NACE == 68
+replace NACE_section = 14 if inrange(NACE, 69, 75)
+replace NACE_section = 15 if inrange(NACE, 77, 82)
+replace NACE_section = 16 if NACE == 84
+replace NACE_section = 17 if NACE == 85
+replace NACE_section = 18 if inrange(NACE, 86, 88)
+replace NACE_section = 19 if inrange(NACE, 90, 93)
+replace NACE_section = 20 if inrange(NACE, 94, 96)
+replace NACE_section = 21 if NACE == 97
+label define NACEsec 0 "X Undefined"
+label define NACEsec 1 "A Agriculture, forestry and fishing", add
+label define NACEsec 2 "B Mining and extraction", add
+label define NACEsec 3 "C Manufacturing", add
+label define NACEsec 4 "D Electricity and gas supply", add
+label define NACEsec 5 "E Water and waste", add
+label define NACEsec 6 "F Construction", add
+label define NACEsec 7 "G Retail and wholesale", add
+label define NACEsec 8 "H Transport and storage", add
+label define NACEsec 9 "I Accommodation and hospitality", add
+label define NACEsec 10 "J Publishing and content production", add
+label define NACEsec 11 "K Telecommunication and information technology", add
+label define NACEsec 12 "L Finance and insurance", add
+label define NACEsec 13 "M Real estate", add
+label define NACEsec 14 "N Professional, scientific and technical services", add
+label define NACEsec 15 "O Administration and support", add
+label define NACEsec 16 "P Public administration and defence", add
+label define NACEsec 17 "Q Education", add
+label define NACEsec 18 "R Human health and social work activities", add
+label define NACEsec 19 "S Arts, sports and recreation", add
+label define NACEsec 20 "T Other service activities", add
+label define NACEsec 21 "U Households as employers", add
+label values NACE_section NACEsec
+
+* Relative-year sales revenue
+gen Y1SRev = salg2019 if RegYear == 2018
+replace Y1SRev = salg2020 if RegYear == 2019
+gen Y2SRev = salg2020 if RegYear == 2018
+replace Y2SRev = salg2021 if RegYear == 2019
+gen Y3SRev = salg2021 if RegYear == 2018
+replace Y3SRev = salg2022 if RegYear == 2019
+gen Y4SRev = salg2022 if RegYear == 2018
+replace Y4SRev = salg2023 if RegYear == 2019
+gen Y5SRev = salg2023 if RegYear == 2018
+replace Y5SRev = salg2024 if RegYear == 2019
+
+* Relative-year total operating revenue
+gen Y1Rev = driftsinnt2019 if RegYear == 2018
+replace Y1Rev = driftsinnt2020 if RegYear == 2019
+gen Y2Rev = driftsinnt2020 if RegYear == 2018
+replace Y2Rev = driftsinnt2021 if RegYear == 2019
+gen Y3Rev = driftsinnt2021 if RegYear == 2018
+replace Y3Rev = driftsinnt2022 if RegYear == 2019
+gen Y4Rev = driftsinnt2022 if RegYear == 2018
+replace Y4Rev = driftsinnt2023 if RegYear == 2019
+gen Y5Rev = driftsinnt2023 if RegYear == 2018
+replace Y5Rev = driftsinnt2024 if RegYear == 2019
+
+forvalues i = 1/5 {
+    gen ln_Y`i'SRev = ln(Y`i'SRev) if Y`i'SRev > 0
+    gen ln_Y`i'Rev = ln(Y`i'Rev) if Y`i'Rev > 0
+}
+gen srev_growth = (Y5SRev - Y1SRev) / Y1SRev if Y1SRev > 0
+gen rev_growth = (Y5Rev - Y1Rev) / Y1Rev if Y1Rev > 0
+
+* Other operating income
+gen Y1Other = andredrift2019 if RegYear == 2018
+replace Y1Other = andredrift2020 if RegYear == 2019
+gen Y5Other = andredrift2023 if RegYear == 2018
+replace Y5Other = andredrift2024 if RegYear == 2019
+gen other_share_Y1 = Y1Other / Y1Rev if Y1Rev > 0 & !missing(Y1Other)
+gen other_share_Y5 = Y5Other / Y5Rev if Y5Rev > 0 & !missing(Y5Other)
+
+* Survival time
+gen surv_time = NSRY if NSRY <= 5
+replace surv_time = 6 if missing(NSRY) | NSRY > 5
+replace surv_time = 0.5 if surv_time == 0
+* For reference and sanity check
+label list
+* ==========================================================
+* Table D27: Bootstrap median regression - Year 1 share of other operating income (no NACE controls)
+* ==========================================================
+qreg other_share_Y1 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear if NACE_section != 16 & NACE_section != 21, quantile(0.5)
+bsqreg other_share_Y1 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear if NACE_section != 16 & NACE_section != 21, quantile(0.5) reps(200)
+* ==========================================================
+* Table D28: Bootstrap median regression - Year 5 share of other operating income (no NACE controls; converges after dropping NACE fixed effects)
+* ==========================================================
+di as text "NOTE: Testing median regression convergence for other_share_Y5 (expected to fail)."
+* Try bsqreg (non-fatal)
+capture noisily bsqreg other_share_Y5 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear if NACE_section != 16 & NACE_section != 21, quantile(0.5) reps(200)
+if _rc {
+    di as text "NOTE: bsqreg did not converge for other_share_Y5 (rc=" _rc "). Proceeding with descriptive evidence only."
+}
+* Try qreg (non-fatal)
+capture noisily qreg other_share_Y5 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear if NACE_section != 16 & NACE_section != 21, quantile(0.5)
+if _rc {
+    di as text "NOTE: qreg did not converge / VCE failed for other_share_Y5 (rc=" _rc "). Proceeding with descriptive evidence only."
+}
+* ==========================================================
+* Year 5 other-income share: re-run without NACE
+* (test whether non-convergence was driven by NACE dimensionality)
+* ==========================================================
+di as text "NOTE: Re-testing median regression convergence for other_share_Y5 without NACE."
+* Try bsqreg without NACE (non-fatal)
+capture noisily bsqreg other_share_Y5 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear if NACE_section != 16 & NACE_section != 21, quantile(0.5) reps(200)
+if _rc {
+di as text "NOTE: bsqreg (no NACE) did not converge for other_share_Y5 (rc=" _rc "). Proceeding with descriptive evidence only."
+}
+* Try qreg without NACE (non-fatal)
+capture noisily qreg other_share_Y5 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear if NACE_section != 16 & NACE_section != 21, quantile(0.5)
+if _rc {
+di as text "NOTE: qreg (no NACE) did not converge / VCE failed for other_share_Y5 (rc=" _rc "). Proceeding with descriptive evidence only."
+}
+* Internal diagnostic only: OLS with robust SE retained to verify NACE inclusion did not cause the sample loss observed in the median specification. Not referenced in main text.
+regress other_share_Y5 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear if NACE_section != 16 & NACE_section != 21, robust
+* ============================================
+* Descriptive check: Other income share in Year 1 and Year 5
+* ============================================
+
+tabstat other_share_Y1 other_share_Y5, by(SFACT_bin) statistics(n mean p50 p75 p90) format(%9.3f)
+count if other_share_Y5 == 0
+count if other_share_Y5 > 0 & !missing(other_share_Y5)
+tabstat other_share_Y5, by(SFACT_bin) statistics(n mean p50 p75 p90 max) format(%9.3f)
+
+* ============================================
+* SANITY CHECKS (Counts and distributions)
+* ============================================
+tab SFACT_bin
+tab SFACT, missing
+tab emp_cat
+tab zip_cat, missing
+tab Chair_gender_cat
+tab failed failed_strict
+
+* ============================================
+* Table 2: Mean and median number of words in company descriptions
+* ============================================
+tabstat word_count_act word_count_obj, statistics(n mean p50 sd) columns(statistics) format(%9.1f)
+
+* ============================================
+* Table 5: Zero/negative revenue counts (OM undefined)
+* Definition:
+*   - Revenue = total operating revenue (Y1Rev..Y5Rev = driftsinnt aligned by cohort)
+*   - "Zero revenue" INCLUDES missing revenue: (YtRev == 0 OR missing(YtRev))
+*   - Negative revenue: (YtRev < 0) 
+*
+* Special final row (2019 cohort, Year 5=2024, incl. financials):
+*   - Revenue base for pretax margin = driftsinnt2024 + finansinnt2024
+*   - "Zero pretax revenue" includes missing: (revbase == 0 OR missing(revbase))
+* ============================================
+
+display as text "Period                              Zero revenue (n)    Negative revenue (n)"
+display as text "--------------------------------------------------------------------------"
+
+* ---- Year 1 to Year 5 (relative year after registration) ----
+forvalues t = 1/5 {
+    quietly count if (Y`t'Rev == 0 | missing(Y`t'Rev))
+    local z = r(N)
+    quietly count if (Y`t'Rev < 0)
+    local n = r(N)
+
+    display as result "Year `t' " %34s "" %10.0f `z' "              " %10.0f `n'
+}
+* ---- Aggregated Year 1-5 (rowtotal treats missing as 0, which is desired) ----
+tempvar Rev_agg_1to5
+egen double `Rev_agg_1to5' = rowtotal(Y1Rev Y2Rev Y3Rev Y4Rev Y5Rev)
+quietly count if (`Rev_agg_1to5' == 0 | missing(`Rev_agg_1to5'))
+local agg_zero = r(N)
+quietly count if (`Rev_agg_1to5' < 0)
+local agg_neg = r(N)
+display as result "Year 1-5 aggregated " %20s "" %10.0f `agg_zero' "              " %10.0f `agg_neg'
+* ---- Special row: Year 5 (2019 cohort only) incl. financial income in revenue base ----
+* Revenue base for pretax margin denominator = driftsinnt2024 + finansinnt2024
+* rowtotal makes missing components count as 0 -> aligns with “missing counts as zero revenue”.
+tempvar RevBase_Y5_2019
+egen double `RevBase_Y5_2019' = rowtotal(driftsinnt2024 finansinnt2024) if RegYear == 2019
+quietly count if RegYear == 2019 & (`RevBase_Y5_2019' == 0 | missing(`RevBase_Y5_2019'))
+local y5_zero = r(N)
+quietly count if RegYear == 2019 & (`RevBase_Y5_2019' < 0)
+local y5_neg = r(N)
+display as result "Year 5 (2019 cohort, incl. fin. income) " %5s "" %10.0f `y5_zero' "              " %10.0f `y5_neg'
+display as text "--------------------------------------------------------------------------"
+
+* ============================================
+* Figure 3: Distribution of aggregated operating margin by sustainability status (kernel density, with normal overlay)
+* ============================================
+summarize AggrOM if AggrOM > -3 & AggrOM < 1.1, detail
+local om_mean = r(mean)
+local om_sd = r(sd)
+twoway (kdensity AggrOM if AggrOM > -3 & AggrOM < 1.1 & SFACT_bin == 0, lcolor(blue)) (kdensity AggrOM if AggrOM > -3 & AggrOM < 1.1 & SFACT_bin == 1, lcolor(red)) (function normalden(x, `om_mean', `om_sd'), range(-3 1.1) lcolor(black) lpattern(dash)), legend(order(1 "Non-sustainable" 2 "Sustainable" 3 "Normal distribution")) xtitle("Operating margin") ytitle("Density")
+graph export "kdensity_om.png", replace width(2000)
+
+* ============================================
+* Table 6: Median aggregated operating margin per NACE category
+* ============================================
+table (NACE_section), statistic(median AggrOM)
+* ============================================
+* Table D2: Observations with non-missing operating margin per NACE category
+* ============================================
+table (NACE_section), statistic(count AggrOM) statistic(count NACE_section)
+
+* ============================================
+* Table D3: Year-5 observations for 2019-cohort firms with non-missing operating margin and pretax margin per NACE category
+* ============================================
+preserve
+keep if RegYear == 2019
+table (NACE_section), statistic(count Y5OM) statistic(count FOMY52019)
+restore
+* ============================================
+* Table D4: Observations with non-missing operating margin per year per NACE category (percentages)
+* ============================================
+preserve
+* For each year-NACE cell, compute share of non-missing OM among firms in that NACE
+foreach y of numlist 1/5 {
+gen pct_Y`y'OM = !missing(Y`y'OM) * 100
+}
+collapse (mean) pct_Y1OM pct_Y2OM pct_Y3OM pct_Y4OM pct_Y5OM, by(NACE_section)
+format pct_Y* %5.1f
+list NACE_section pct_Y1OM pct_Y2OM pct_Y3OM pct_Y4OM pct_Y5OM, sep(0) noobs abbrev(20)
+restore
+* Absolute numbers for reference
+foreach y of numlist 1/5 {
+table (NACE_section), statistic(count Y`y'OM)
+}
+* ============================================
+* Table 8: Percentage and number of active and sustainable firms per NACE category
+* ============================================
+preserve
+collapse (count) total = Exists_bin (sum) sust_n = SFACT_bin (mean) pct_active = Exists_bin pct_sust = SFACT_bin, by(NACE_section)
+replace pct_active = 100 * pct_active
+replace pct_sust = 100 * pct_sust
+format pct_active pct_sust %5.1f
+gsort -pct_active
+list NACE_section pct_active total pct_sust sust_n, clean noobs
+restore
+
+* ============================================
+* Table 9: Exit events by year, type, and percentage of active firms
+* ============================================
+display as text "Year   Active   Bankrupt   %      Dissolution   %      Voluntary   %      Total   %"
+local active = _N
+forvalues y = 0/5 {
+    count if NSRY == `y' & NSR == "Firm failure - bankruptcy"
+    local bank = r(N)
+    count if NSRY == `y' & NSR == "Firm failure - dissolution"
+    local diss = r(N)
+    count if NSRY == `y' & NSR == "Voluntarily discontinuation"
+    local vol = r(N)
+    local total = `bank' + `diss' + `vol'
+    local pbank = 100 * `bank' / `active'
+    local pdiss = 100 * `diss' / `active'
+    local pvol = 100 * `vol' / `active'
+    local ptot = 100 * `total' / `active'
+    display as result %4.0f `y' "   " %6.0f `active' "   " %8.0f `bank' "   " %6.2f `pbank' "   " %11.0f `diss' "   " %6.2f `pdiss' "   " %9.0f `vol' "   " %6.2f `pvol' "   " %7.0f `total' "   " %6.2f `ptot'
+    local active = `active' - `total'
+}
+count if NSRY <= 5 & NSR == "Firm failure - bankruptcy"
+local tbank = r(N)
+count if NSRY <= 5 & NSR == "Firm failure - dissolution"
+local tdiss = r(N)
+count if NSRY <= 5 & NSR == "Voluntarily discontinuation"
+local tvol = r(N)
+local ttotal = `tbank' + `tdiss' + `tvol'
+display as result "Total " %6.0f _N "   " %8.0f `tbank' "   " %6.2f (100 * `tbank' / _N) "   " %11.0f `tdiss' "   " %6.2f (100 * `tdiss' / _N) "   " %9.0f `tvol' "   " %6.2f (100 * `tvol' / _N) "   " %7.0f `ttotal' "   " %6.2f (100 * `ttotal' / _N)
+display as text "CHECK: surviving after year 5"
+display as result `active'
+
+* ============================================
+* Table 10: Descriptive statistics for continuous variables by sustainability status
+* ============================================
+tabstat AggrOM ln_aksje Antallansatte, by(SFACT_bin) statistics(n mean sd p50) format(%9.3f)
+
+* ============================================
+* Table 11: Sample composition
+* ============================================
+tab SFACT_bin
+tab SFACT, missing
+tab emp_cat
+tab zip_cat, missing
+tab Chair_gender_cat
+tab RegYear
+
+* ============================================
+* Table 12: Descriptive statistics for registered share capital by sustainability status
+* ============================================
+tabstat Aksjekapital, by(SFACT_bin) statistics(mean p50 sd p75 p90 p95 max) format(%12.3fc)
+
+* ============================================
+* Figure 4: Distribution of aggregated operating margin by sustainability status (winsorized at the 5th and 95th percentiles)
+* ============================================
+preserve
+drop if missing(AggrOM)
+summarize AggrOM, detail
+local p5 = r(p5)
+local p95 = r(p95)
+gen AggrOM_w = AggrOM
+replace AggrOM_w = `p5' if AggrOM < `p5'
+replace AggrOM_w = `p95' if AggrOM > `p95'
+label define sfact_lbl 0 "Non-sustainable" 1 "Sustainable", replace
+label values SFACT_bin sfact_lbl
+graph box AggrOM_w, over(SFACT_bin) ytitle("Operating margin (winsorized 5/95)") yline(0, lcolor(black) lpattern(dash)) note("Winsorized at 5th and 95th percentiles.")
+graph export "boxplot_sustainability.png", replace width(2000)
+restore
+
+* ============================================
+* Figure 6: Median total operating revenue by sustainability factor, years 1-5 after registration
+* ============================================
+preserve
+collapse (median) Y1Rev Y2Rev Y3Rev Y4Rev Y5Rev, by(SFACT_bin)
+reshape long Y@Rev, i(SFACT_bin) j(Year)
+twoway (line YRev Year if SFACT_bin == 0, lcolor(blue)) (line YRev Year if SFACT_bin == 1, lcolor(red)), legend(order(1 "Non-sustainable" 2 "Sustainable")) ytitle("Median total operating revenue (NOK)") xtitle("Year after registration")
+graph export "median_total_revenue_sustainability.png", replace width(2000)
+restore
+
+* ============================================
+* Figure C1: Distribution of log registered share capital by sustainability-oriented startups
+* ============================================
+twoway (kdensity ln_aksje if SFACT_bin == 0, lcolor(blue)) (kdensity ln_aksje if SFACT_bin == 1, lcolor(red)), legend(order(1 "Non-sustainable" 2 "Sustainable")) xline(10.309, lpattern(dash) lcolor(black)) xtitle("Log registered share capital") ytitle("Density")
+graph export "fig_sharecapital_density.png", replace width(2000)
+
+* ============================================
+* Table D5: Cox proportional hazards model by number of sustainability factors (SFACT 0-5), controlling for NACE category and registration year
+* Two panels: D5a all-cause exit; D5b strict failure
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+* Panel D5a: all-cause exit
+stset surv_time, failure(failed)
+stcox i.SFACT i.NACE_section i.RegYear
+estimates store D5a
+estat phtest, detail
+* Panel D5b: strict failure
+stset surv_time, failure(failed_strict)
+stcox i.SFACT i.NACE_section i.RegYear
+estimates store D5b
+estat phtest, detail
+* Export
+esttab D5a D5b, eform b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("All-cause" "Strict failure") title("Table D5: Cox proportional hazards model by number of sustainability factors (SFACT 0-5), n = 60,120") tab replace
+restore
+* ============================================
+* Table C2: Cox proportional hazards model: Five-year firm survival by board chair gender, controlling for NACE category
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+stcox i.Chair_gender_cat i.NACE_section i.RegYear
+restore
+
+* ============================================
+* Figure X1: Kaplan-Meier survival estimates by sustainability factor
+* ============================================
+preserve
+stset surv_time, failure(failed)
+sts graph, by(SFACT_bin) legend(order(1 "Non-sustainable" 2 "Sustainable")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_sustainability_binary.png", replace width(2000)
+sts test SFACT_bin
+restore
+
+* ============================================
+* Figure X2: Kaplan-Meier survival estimates by sustainability factor value
+* ============================================
+preserve
+stset surv_time, failure(failed)
+sts graph, by(SFACT) legend(order(1 "0" 2 "1" 3 "2" 4 "3" 5 "4" 6 "5")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_sustainability_0to5.png", replace width(2000)
+sts test SFACT
+restore
+
+* ============================================
+* Figure C2: Kaplan-Meier survival estimates by board chair gender
+* ============================================
+preserve
+keep if Chair_gender == "Male" | Chair_gender == "Female"
+stset surv_time, failure(failed)
+sts graph, by(Chair_gender_cat) legend(order(1 "Female" 2 "Male")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_gender.png", replace width(2000)
+sts test Chair_gender_cat
+restore
+
+* ============================================
+* Figure C3: Kaplan-Meier survival estimates by employee category
+* ============================================
+preserve
+stset surv_time, failure(failed)
+sts graph, by(emp_cat) legend(order(1 "No employees" 2 "1-4" 3 "5-19" 4 "20+")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_employees.png", replace width(2000)
+sts test emp_cat
+restore
+
+* ============================================
+* Figure 8: Kaplan-Meier survival estimates by zip code distance between board chair and company location
+* ============================================
+preserve
+stset surv_time, failure(failed)
+sts graph, by(zip_cat) legend(order(1 "Same zip" 2 "Nearby" 3 "Moderate" 4 "Far" 5 "Missing")) ytitle("Survival probability") xtitle("Year")
+graph export "km_zip.png", replace width(2000)
+sts test zip_cat
+restore
+
+* ============================================
+* Tables D9-D15: Nested Cox models, strict failure - SFACT_bin coefficient evolution from M1 (sustainability factor only) through M7 (full specification, Table 13)
+* zip_cat and Chair_gender_cat entered as separate models
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+estimates clear
+
+* ----- M1: SFACT_bin only -----
+stcox i.SFACT_bin
+estimates store M1
+* ----- M2: + NACE_section -----
+stcox i.SFACT_bin i.NACE_section
+estimates store M2
+* ----- M3: + RegYear -----
+stcox i.SFACT_bin i.NACE_section i.RegYear
+estimates store M3
+* ----- M4a: + zip_cat only (geography) -----
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat
+estimates store M4a
+* ----- M4b: + Chair_gender_cat only (governance) -----
+stcox i.SFACT_bin i.NACE_section i.RegYear i.Chair_gender_cat
+estimates store M4b
+* ----- M5: + zip_cat + Chair_gender_cat -----
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat
+estimates store M5
+* ----- M6: + ln_aksje -----
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje
+estimates store M6
+* ----- M7: + emp_cat (full Table 13: Cox proportional hazards model: Five-year firm survival using strict failure definition) -----
+* ============================================
+* Table 13: Cox proportional hazards model — Five-year firm survival (strict failure, full specification)
+* ============================================
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje i.emp_cat
+estat phtest, detail
+estimates store M7
+* ============================================
+* Output: SFACT_bin coefficient progression
+* ============================================
+* p-values version:
+esttab M1 M2 M3 M4a M4b M5 M6 M7, eform keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full") title("SFACT_bin hazard ratio across nested Cox models - strict failure")
+
+esttab M1 M2 M3 M4a M4b M5 M6 M7 using sfact_progression_strict_p.tab, eform keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full") tab replace
+* CI version:
+esttab M1 M2 M3 M4a M4b M5 M6 M7, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full") title("SFACT_bin hazard ratio across nested Cox models - strict failure")
+esttab M1 M2 M3 M4a M4b M5 M6 M7 using sfact_progression_strict_ci.tab, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full") tab replace
+* ============================================
+* Extract HR + 95 % CI for plotting
+* ============================================
+tempname memhold
+postfile `memhold' step str30 label HR lb ub pval using sfact_evolution_strict.dta, replace
+local models   M1 M2 M3 M4a M4b M5 M6 M7
+local labels `" "(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full" "'
+local i = 1
+foreach m of local models {
+    estimates restore `m'
+    local lab : word `i' of `labels'
+    scalar hr = exp(_b[1.SFACT_bin])
+    scalar lb = exp(_b[1.SFACT_bin] - 1.96 * _se[1.SFACT_bin])
+    scalar ub = exp(_b[1.SFACT_bin] + 1.96 * _se[1.SFACT_bin])
+    scalar pv = 2 * (1 - normal(abs(_b[1.SFACT_bin] / _se[1.SFACT_bin])))
+    post `memhold' (`i') ("`lab'") (hr) (lb) (ub) (pv)
+    local ++i
+}
+postclose `memhold'
+use sfact_evolution_strict.dta, clear
+list, sep(0) noobs
+twoway (rcap lb ub step, lcolor(navy)) (scatter HR step, mcolor(navy) msize(medlarge)), yline(1, lcolor(gs10) lpattern(dash)) ytitle("Hazard ratio (SFACT_bin = 1)") xtitle("") xlabel(1 "M1" 2 "M2: +NACE" 3 "M3: +Year" 4 "M4a: +Zip" 5 "M4b: +Gender" 6 "M5: +Zip+Gender" 7 "M6: +Equity" 8 "M7: Full", angle(30)) title("SFACT_bin hazard ratio: nested Cox models, strict failure") legend(off)
+graph export sfact_progression_strict.png, width(2000) replace
+restore
+* ============================================
+* Nested Cox models: All-cause exit 
+* Tables D16-D22: SFACT_bin coefficient evolution from AC1 (sustainability factor only) through AC7 (full specification, Table 14)
+* Outcome: ALL-CAUSE exit (parallel to strict-failure progression)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+estimates clear
+stcox i.SFACT_bin
+estimates store AC1
+stcox i.SFACT_bin i.NACE_section
+estimates store AC2
+stcox i.SFACT_bin i.NACE_section i.RegYear
+estimates store AC3
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat
+estimates store AC4a
+stcox i.SFACT_bin i.NACE_section i.RegYear i.Chair_gender_cat
+estimates store AC4b
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat
+estimates store AC5
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje
+estimates store AC6
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje i.emp_cat
+estimates store AC7
+esttab AC1 AC2 AC3 AC4a AC4b AC5 AC6 AC7, eform keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full") title("SFACT_bin hazard ratio across nested Cox models - all-cause exit")
+esttab AC1 AC2 AC3 AC4a AC4b AC5 AC6 AC7 using sfact_progression_allcause_p.tab, eform keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("(1) SFACT only" "(2) +NACE" "(3) +Year" "(4a) +Zip" "(4b) +Gender" "(5) +Zip+Gender" "(6) +Equity" "(7) Full") tab replace
+restore
+
+* ============================================
+* Table 14: Cox proportional hazards model: Five-year firm survival (full specification)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+display as text _newline "=== Schoenfeld test: ALL-CAUSE model (Table 14) ==="
+estat phtest, detail
+restore
+
+* ============================================
+* Table 15: Median regression: Five-year revenue growth (full specification)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg rev_growth ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+restore
+
+* ============================================
+* Table 16: Median regression: Aggregated operating margin (full specification)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+estimates store qreg_M1
+restore
+* ============================================
+* Figure 9: Profitability penalty across the profitability distribution
+* Table D23: Sustainability coefficient on aggregated operating margin across eleven quantile levels (10th to 90th percentile, n = 39,069)
+* ============================================
+* --- Part 1: estimation ---
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+matrix SQ = J(11,4,.)
+local row = 1
+foreach q in 10 20 25 30 40 50 60 70 75 80 90 {
+    qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.`q')
+    estimates store q`q'
+    matrix SQ[`row',1] = `q'
+    matrix SQ[`row',2] = _b[1.SFACT_bin]
+    matrix SQ[`row',3] = _b[1.SFACT_bin] - 1.96 * _se[1.SFACT_bin]
+    matrix SQ[`row',4] = _b[1.SFACT_bin] + 1.96 * _se[1.SFACT_bin]
+    local row = `row' + 1
+}
+restore
+* --- Part 2: plotting (Figure 9) ---
+preserve
+clear
+set obs 11
+gen quantile = .
+gen coef = .
+gen ci_lo = .
+gen ci_hi = .
+forvalues i = 1/11 {
+    replace quantile = SQ[`i',1] in `i'
+    replace coef = SQ[`i',2] in `i'
+    replace ci_lo = SQ[`i',3] in `i'
+    replace ci_hi = SQ[`i',4] in `i'
+}
+twoway (connected coef quantile, lcolor(blue) mcolor(blue) msize(medium)) (rcap ci_hi ci_lo quantile, lcolor(blue%50)), yline(0, lcolor(black) lpattern(dash)) legend(off) ytitle("Sustainability coefficient") xtitle("Quantile of operating margin") xlabel(10(10)90) title("Sustainability penalty across the profitability distribution")
+graph export "quantile_process_sustainability.png", replace width(2000)
+restore
+* estimates dir (used during development)
+* --- Part 3: Table D23 export (two views: p-values and CIs) ---
+esttab q10 q20 q25 q30 q40 q50 q60 q70 q75 q80 q90, keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Q10" "Q20" "Q25" "Q30" "Q40" "Q50" "Q60" "Q70" "Q75" "Q80" "Q90") title("Table D23: Sustainability coefficient on aggregated operating margin across eleven quantile levels, n = 39,069 (p-values)") tab replace
+esttab q10 q20 q25 q30 q40 q50 q60 q70 q75 q80 q90, keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Q10" "Q20" "Q25" "Q30" "Q40" "Q50" "Q60" "Q70" "Q75" "Q80" "Q90") title("Table D23: Sustainability coefficient on aggregated operating margin across eleven quantile levels, n = 39,069 (95% CIs)") tab replace
+* ============================================
+* Figure 10: Sustainability effect at the 25th, 50th, and 75th percentiles
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.25)
+estimates store q25
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.50)
+estimates store q50
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.75)
+estimates store q75
+coefplot q25 q50 q75, keep(1.SFACT_bin) xline(0, lcolor(black) lpattern(dash)) legend(order(1 "25th percentile" 2 "50th percentile" 3 "75th percentile")) title("Sustainability effect at the 25th, 50th, and 75th percentiles") note("Coefficient on SUST from quantile regressions. Controls: EQUITY, EMP, ZIP, GENDER, NACE, cohort.")
+graph export "coefplot_sfact_quantiles.png", replace width(2000)
+restore
+
+* ============================================
+* Figure 7: Kaplan-Meier survival estimates by sustainability factor (strict failure definition)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+tab failed failed_strict
+stset surv_time, failure(failed_strict)
+sts graph, by(SFACT_bin) legend(order(1 "Non-sustainable" 2 "Sustainable")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_sustainability_binary_strict.png", replace width(2000)
+sts test SFACT_bin
+restore
+
+* ============================================
+* Figure X3: Kaplan-Meier survival estimates by sustainability factor value (strict failure definition)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+sts graph, by(SFACT) legend(order(1 "0" 2 "1" 3 "2" 4 "3" 5 "4" 6 "5")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_sustainability_0to5_strict.png", replace width(2000)
+sts test SFACT
+restore
+
+* ============================================
+* Figure X4: Kaplan-Meier survival estimates by board chair gender (strict failure definition)
+* ============================================
+preserve
+keep if Chair_gender == "Male" | Chair_gender == "Female"
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+sts graph, by(Chair_gender_cat) legend(order(1 "Female" 2 "Male")) ytitle("Survival probability") xtitle("Year") ylabel(0.5(0.1)1)
+graph export "km_gender_strict.png", replace width(2000)
+sts test Chair_gender_cat
+restore
+
+* ============================================
+* Table C3: Cox proportional hazards model: Five-year firm survival by board chair gender, sustainability factor, and their interaction, controlling for NACE category
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+stcox i.Chair_gender_cat##i.SFACT_bin i.NACE_section i.RegYear
+di as text _newline "=== H3a: gender × SUST joint test (all-cause) ==="
+testparm i.Chair_gender_cat#i.SFACT_bin
+restore
+* ============================================
+* Table D6 (Part 1 of 2): zip x sustainability interaction Cox proportional hazards model, strict failure
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+stcox i.zip_cat##i.SFACT_bin ln_aksje i.emp_cat i.Chair_gender_cat i.NACE_section i.RegYear
+estimates store zip_sust_strict
+di as text _newline "=== H3b: zip × SUST joint test (strict failure) ==="
+testparm i.zip_cat#i.SFACT_bin
+restore
+* ============================================
+* Table D6 (Part 2 of 2): zip x sustainability interaction Cox proportional hazards model, all-cause exit
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+stcox i.zip_cat##i.SFACT_bin ln_aksje i.emp_cat i.Chair_gender_cat i.NACE_section i.RegYear
+estimates store zip_sust_allcause
+di as text _newline "=== H3b: zip × SUST joint test (all-cause) ==="
+testparm i.zip_cat#i.SFACT_bin
+restore
+* ============================================
+* Supporting output for Table C3: Cox proportional hazards model with board chair gender, sustainability factor, and their interaction (strict failure)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+stcox i.Chair_gender_cat##i.SFACT_bin i.NACE_section i.RegYear
+testparm i.Chair_gender_cat#i.SFACT_bin
+restore
+* ============================================
+* Table C4: Sectoral heterogeneity test: Median regression of aggregated operating margin with sustainability x NACE interaction
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM i.SFACT_bin##i.NACE_section ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.RegYear, quantile(0.5)
+testparm i.SFACT_bin#i.NACE_section
+restore
+* ============================================
+* Table D7: Chair gender x sustainability interaction, median regression on aggregated operating margin
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM i.Chair_gender_cat##i.SFACT_bin ln_aksje i.emp_cat i.zip_cat i.NACE_section i.RegYear, quantile(0.5)
+estimates store gender_sust_om
+di as text _newline "=== H3a: gender × SUST joint test (operating margin) ==="
+testparm i.Chair_gender_cat#i.SFACT_bin
+restore
+* ============================================
+* Table D8: zip x sustainability interaction, median regression on aggregated operating margin
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM i.zip_cat##i.SFACT_bin ln_aksje i.emp_cat i.Chair_gender_cat i.NACE_section i.RegYear, quantile(0.5)
+estimates store zip_sust_om
+di as text _newline "=== H3b: zip × SUST joint test (operating margin) ==="
+testparm i.zip_cat#i.SFACT_bin
+restore
+
+* ============================================
+* Table C5: Non-linearity test: Median regression with continuous sustainability factor
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM SFACT SFACT_sq ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.NACE_section i.RegYear, quantile(0.5)
+test SFACT SFACT_sq
+restore
+
+* ============================================
+* Table C6: Non-linearity test: Cox proportional hazards model with continuous sustainability factor
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+stcox SFACT SFACT_sq ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.NACE_section i.RegYear
+restore
+
+* ============================================
+* Table C7: Median total operating revenue by sustainability status among formally survived firms, years 1-5
+* ============================================
+preserve
+keep if failed == 0
+collapse (median) Y1Rev Y2Rev Y3Rev Y4Rev Y5Rev, by(SFACT_bin)
+list, clean noobs
+restore
+
+* ============================================
+* Table D1: Median sales revenue by sustainability status among formally survived firms, years 1-5
+* ============================================
+preserve
+keep if failed == 0
+collapse (median) Y1SRev Y2SRev Y3SRev Y4SRev Y5SRev, by(SFACT_bin)
+list, clean noobs
+restore
+
+* ============================================
+* Table D24: Cox proportional hazards model stratified by NACE section
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear, strata(NACE_section)
+estat phtest, detail
+restore
+
+* ============================================
+* Table D38: Logistic regression predicting sustainability status by board chair gender
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+logit SFACT_bin i.Chair_gender_cat ln_aksje i.emp_cat i.zip_cat i.NACE_section
+restore
+* ============================================
+* Supporting output for Tables D29, D30 and D33: NACE robustness - excluding the undefined NACE category
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 0 | NACE_section == 16 | NACE_section == 21
+count
+tab NACE_section, missing
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+restore
+* ============================================
+* Table D43: Cox proportional hazards model with Missing NACE re-coded as a separate category (all-cause and strict failure, n = 60,164)
+* ============================================
+preserve
+replace NACE_section = 22 if missing(NACE_section)
+label define NACEsec 22 "Missing NACE", add
+tab NACE_section, missing
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store cox_M2_all
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+estimates store qreg_M2_all
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store cox_M2_strict
+esttab cox_M2_all cox_M2_strict, eform b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("All-cause" "Strict failure") title("Table D43: Cox proportional hazards model with Missing NACE re-coded as a separate category, n = 60,164") addnote("Strict-failure Missing-NACE coefficient not estimable (zero strict failures among 26 missing-NACE firms).") tab replace
+restore
+* ============================================
+* Table D42: Cox proportional hazards model, strict-failure five-year survival, with vs without zip distance as a control - decomposition of the sustainability hazard ratio
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store no_zip_strict
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store with_zip_strict
+esttab no_zip_strict with_zip_strict, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Without zip" "With zip") title("Table D42: Strict-failure sustainability hazard ratio with vs without zip distance")
+restore
+* ============================================
+* Supporting output for Tables D41 and D42: zip-distance decomposition
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+drop if zip_cat == 4
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store no_zip_clean
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store with_zip_clean
+esttab no_zip_clean with_zip_clean, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Without zip" "With zip") title("Decomposition without missing-zip firms")
+restore
+* ============================================
+* Table D44: Diagnostic - employee distribution among failed firms by Y1-Y3 revenue trajectory
+* ============================================
+preserve
+keep if failed == 1
+gen rev_traj = .
+replace rev_traj = 0 if missing(Y1Rev) | (Y1Rev == 0 & Y2Rev == 0 & Y3Rev == 0 & Y4Rev == 0 & Y5Rev == 0)
+replace rev_traj = 1 if Y1Rev > 0 & !missing(Y1Rev) & !missing(Y3Rev) & Y3Rev <= Y1Rev * 0.5
+replace rev_traj = 2 if Y1Rev > 0 & !missing(Y1Rev) & !missing(Y3Rev) & Y3Rev > Y1Rev * 0.5
+label define rev_traj_lbl 0 "No revenue" 1 "Sharp decline" 2 "Stable or rising"
+label values rev_traj rev_traj_lbl
+tab emp_cat rev_traj, col
+restore
+* ============================================
+* Table D45: Diagnostic - employee distribution among failed firms by peak-to-final revenue ratio
+* ============================================
+preserve
+keep if failed == 1
+gen rev_peak = max(Y1Rev, Y2Rev, Y3Rev, Y4Rev, Y5Rev)
+gen rev_peak_year = .
+forvalues y = 1/5 {
+replace rev_peak_year = `y' if Y`y'Rev == rev_peak & missing(rev_peak_year) & rev_peak > 0 & !missing(rev_peak)
+}
+gen rev_last = .
+forvalues y = 1/5 {
+replace rev_last = Y`y'Rev if !missing(Y`y'Rev) & (rev_last < Y`y'Rev | missing(rev_last) | `y' >= rev_peak_year)
+}
+gen scaled_then_declined = (rev_peak > 0 & !missing(rev_peak) & !missing(rev_last) & rev_last <= rev_peak * 0.5)
+tab emp_cat scaled_then_declined, col
+restore
+* ============================================
+* Table D46: Cox proportional hazards model, all-cause and strict-failure five-year survival, cleaned sample (excluding missing-zip firms)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+drop if zip_cat == 4
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store allcause_no_mz
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store strict_no_mz
+esttab allcause_no_mz strict_no_mz, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("All-cause" "Strict failure") title("Table D46: Sustainability HR excluding missing-zip firms")
+restore
+* ============================================
+* Table D47: Cox proportional hazards model, all-cause and strict-failure five-year survival, cleaned sample (excluding Uncertain-gender firms)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+drop if Chair_gender_cat == 3
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store allcause_no_ug
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store strict_no_ug
+esttab allcause_no_ug strict_no_ug, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("All-cause" "Strict failure") title("Table D47: Sustainability HR excluding uncertain-gender firms")
+restore
+* ============================================
+* Table D48: Cox proportional hazards model, all-cause and strict-failure five-year survival, cleaned sample (excluding both missing-zip and Uncertain-gender firms)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+drop if zip_cat == 4
+drop if Chair_gender_cat == 3
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store allcause_clean_full
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store strict_clean_full
+esttab allcause_clean_full strict_clean_full, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("All-cause" "Strict failure") title("Table D48: Sustainability HR excluding missing-zip and uncertain-gender firms")
+restore
+* ============================================
+* Supporting output for Tables D29, D30 and D33 (Model 3 row): no NACE controls, n = 60,164
+* ============================================
+preserve
+* All-cause exit
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear
+estimates store cox_M3_all
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear, quantile(0.5)
+estimates store qreg_M3
+* Strict failure
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear
+estimates store cox_M3_strict
+restore
+* ============================================
+* Re-store M7 (Model 1 strict): re-estimated because the preceding "estimates clear" command discards the stored estimates
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store M7
+restore
+* ============================================
+* Table D33: Strict-failure NACE robustness across the three models
+* ============================================
+esttab M7 cox_M2_strict cox_M3_strict, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 60,120)" "Model 2 (Missing NACE category, n = 60,164)" "Model 3 (no NACE, n = 60,164)") title("Table D33: Strict-failure sustainability hazard ratio across NACE specifications")
+esttab M7 cox_M2_strict cox_M3_strict using tableA20_strict_NACE_robustness.tab, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 60,120)" "Model 2 (Missing NACE category, n = 60,164)" "Model 3 (no NACE, n = 60,164)") title("Table D33: Strict-failure sustainability hazard ratio across NACE specifications") tab replace
+* ============================================
+* Table D29: All-cause sustainability hazard ratio across NACE specifications
+* ============================================
+esttab AC7 cox_M2_all cox_M3_all, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 60,120)" "Model 2 (Missing NACE category, n = 60,164)" "Model 3 (no NACE, n = 60,164)") title("All-cause exit: sustainability hazard ratio across NACE specifications")
+esttab AC7 cox_M2_all cox_M3_all using tableA19_A21_allcause_NACE_robustness.tab, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 60,120)" "Model 2 (Missing NACE category, n = 60,164)" "Model 3 (no NACE, n = 60,164)") title("All-cause exit: sustainability hazard ratio across NACE specifications") tab replace
+* ============================================
+* Table D30: All-cause sustainability coefficient (median regression) across NACE specifications
+* ============================================
+* Builds on the qreg estimates stored earlier:
+* - qreg_M1 in the Table 16 block (full controls, n = 39,069)
+* - qreg_M2_all in the Including-NACE-P-U-Missing block (Missing NACE category, n = 39,075)
+* - qreg_M3 in the No-NACE-controls block (no NACE controls, n = 39,075)
+
+esttab qreg_M1 qreg_M2_all qreg_M3, keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 39,069)" "Model 2 (Missing NACE category, n = 39,075)" "Model 3 (no NACE, n = 39,075)") title("Table D30: Median regression sustainability coefficient on aggregated operating margin across NACE specifications")
+esttab qreg_M1 qreg_M2_all qreg_M3 using tableX29_allcause_NACE_robustness_median.tab, keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 39,069)" "Model 2 (Missing NACE category, n = 39,075)" "Model 3 (no NACE, n = 39,075)") title("Table D30: Median regression sustainability coefficient across NACE specifications") tab replace
+* ============================================
+* Table C9: Median regression: Pretax margin (Year 5, 2019 cohort)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+keep if RegYear == 2019
+count
+qreg FOMY52019 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section, quantile(0.5)
+reg FOMY52019 ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section, robust
+restore
+
+* ============================================
+* Table C8: Robustness check: Cox proportional hazards model
+*            by registration year (pandemic sensitivity)
+* ============================================
+* --- All-cause exit, both cohorts ---
+  foreach cohort in 2018 2019 {
+      display as text _newline "=== Cohort `cohort' - all-cause exit ==="
+      preserve
+          keep if RegYear == `cohort'
+          drop if missing(NACE_section)
+          drop if NACE_section == 16 | NACE_section == 21
+          stset surv_time, failure(failed)
+          stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section
+          estimates store cox_`cohort'_all
+      restore
+  }
+  * --- Strict failure, both cohorts ---
+  foreach cohort in 2018 2019 {
+      display as text _newline "=== Cohort `cohort' - strict failure ==="
+      preserve
+          keep if RegYear == `cohort'
+          drop if missing(NACE_section)
+          drop if NACE_section == 16 | NACE_section == 21
+          stset surv_time, failure(failed_strict)
+          stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section
+          estimates store cox_`cohort'_strict
+      restore
+  }
+
+  * --- Side-by-side comparison (hazard ratios) ---
+  display as text _newline "=== Table C8: Cox by cohort (HRs) ==="
+  estimates table cox_2018_all cox_2019_all cox_2018_strict cox_2019_strict, star eform b(%9.3f) keep(1.SFACT_bin ln_aksje 1.emp_cat 2.emp_cat 3.emp_cat 1.zip_cat 2.zip_cat 3.zip_cat 4.zip_cat 2.Chair_gender_cat 3.Chair_gender_cat) title("Table C8: Cox by cohort and failure definition (hazard ratios)")
+
+* ============================================
+* Table D35: Robustness check: Year-by-year median regression of operating margin
+* ============================================
+forvalues y = 1/5 {
+    display as text "YEAR `y': median regression for yearly operating margin"
+    preserve
+    drop if missing(NACE_section)
+    drop if NACE_section == 16 | NACE_section == 21
+    qreg Y`y'OM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+    restore
+}
+* ============================================
+* Table D34: Random-effects panel regression - sustainability x year interaction on operating margin (n = 149,895 firm-years; firm-clustered standard errors)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+gen firm_id = _n
+reshape long Y@OM, i(firm_id) j(Year)
+drop if missing(YOM)
+count
+tab Year
+reg YOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear i.Year, cluster(firm_id)
+reg YOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin##i.Year i.NACE_section i.RegYear, cluster(firm_id)
+testparm i.SFACT_bin#i.Year
+xtset firm_id Year
+xtreg YOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin##i.Year i.NACE_section i.RegYear, re
+testparm i.SFACT_bin#i.Year
+restore
+
+* ============================================
+* Table D39: Logistic regression: predicting far-distance chair (zip_cat = 3) by sustainability factor, controlling for NACE section
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+gen far_chair = (zip_cat == 3) if !missing(zip_cat)
+logit far_chair i.SFACT_bin i.NACE_section, or
+restore
+
+* ============================================
+* Table D40: Sustainability predicting zip distance category
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+ologit zip_cat i.SFACT_bin i.NACE_section, or
+restore
+
+* ============================================
+* Table D41: Cox proportional hazards model, all-cause five-year survival, with vs without zip distance as a control - decomposition of the sustainability hazard ratio
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store no_zip
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store with_zip
+estimates table no_zip with_zip, star stats(N chi2)
+restore
+
+* ============================================
+* Supporting output for Table D31: Leave-one-out sensitivity analysis: NACE category exclusion (Cox survival model)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+stset surv_time, failure(failed)
+display as text "Baseline model"
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+display as text "Excluded NACE    HR(SFACT_bin)     z         p         N       Failures"
+levelsof NACE_section, local(sections)
+foreach s of local sections {
+    restore, preserve
+    keep if NACE_section != `s'
+    stset surv_time, failure(failed)
+    stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+    local hr = exp(_b[1.SFACT_bin])
+    local z = _b[1.SFACT_bin] / _se[1.SFACT_bin]
+    local p = 2 * normal(-abs(`z'))
+    local n = e(N)
+    local f = e(N_fail)
+    local nlabel : label (NACE_section) `s'
+    display as result "`nlabel'" "    " %9.3f `hr' "    " %8.3f `z' "    " %8.3f `p' "    " %8.0f `n' "    " %8.0f `f'
+    }
+restore
+* ============================================
+* Table D31: LOO sensitivity (all-cause exit) - sustainability HR by excluded NACE section
+* ============================================
+quietly levelsof NACE_section if !missing(NACE_section) & NACE_section != 16 & NACE_section != 21, local(naces)
+display as text "{hline 75}"
+display as text %-50s "Excluded NACE section" %12s "HR" %12s "p-value"
+display as text "{hline 75}"
+quietly {
+foreach n of local naces {
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+drop if NACE_section == `n'
+local lbl : label (NACE_section) `n'
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+local hr = exp(_b[1.SFACT_bin])
+local p = 2 * (1 - normal(abs(_b[1.SFACT_bin] / _se[1.SFACT_bin])))
+noisily display as text %-50s "`lbl'" %12.3f `hr' %12.3f `p'
+restore
+}
+}
+display as text "{hline 75}"
+* ============================================
+* Table D32: LOO sensitivity (strict failure) - sustainability HR by excluded NACE section
+* ============================================
+quietly levelsof NACE_section if !missing(NACE_section) & NACE_section != 16 & NACE_section != 21, local(naces)
+display as text "{hline 75}"
+display as text %-50s "Excluded NACE section" %12s "HR" %12s "p-value"
+display as text "{hline 75}"
+quietly {
+foreach n of local naces {
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+drop if NACE_section == `n'
+local lbl : label (NACE_section) `n'
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+local hr = exp(_b[1.SFACT_bin])
+local p = 2 * (1 - normal(abs(_b[1.SFACT_bin] / _se[1.SFACT_bin])))
+noisily display as text %-50s "`lbl'" %12.3f `hr' %12.3f `p'
+restore
+}
+}
+display as text "{hline 75}"
+* ============================================
+* Full output supporting Table D37: Leave-one-out sensitivity analysis: NACE category exclusion (median regression)
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+display as text "Baseline model"
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+display as text "Excluded NACE    Coef(SFACT_bin)    t         p         N"
+levelsof NACE_section, local(sections_qreg)
+foreach s of local sections_qreg {
+    restore, preserve
+    keep if NACE_section != `s'
+    qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+    local b = _b[1.SFACT_bin]
+    local t = _b[1.SFACT_bin] / _se[1.SFACT_bin]
+    local p = 2 * ttail(e(df_r), abs(`t'))
+    local n = e(N)
+    local nlabel : label (NACE_section) `s'
+    display as result "`nlabel'" "    " %12.3f `b' "    " %8.3f `t' "    " %8.3f `p' "    " %8.0f `n'
+    }
+restore
+* ============================================
+* Table D37: Leave-one-out sensitivity analysis summary: NACE category exclusion (median regression). 
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+display as text "Baseline model"
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+levelsof NACE_section, local(sections_qreg)
+display ""
+display as text "Excluded NACE                                       Coef    t-stat   p-value   N"
+display as text "{hline 90}"
+quietly {
+foreach s of local sections_qreg {
+restore, preserve
+keep if NACE_section != `s'
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+local b = _b[1.SFACT_bin]
+local t = _b[1.SFACT_bin] / _se[1.SFACT_bin]
+local p = 2 * ttail(e(df_r), abs(`t'))
+local n = e(N)
+local nlabel : label (NACE_section) `s'
+noisily display as result %-50s "`nlabel'" %8.3f `b' %10.3f `t' %10.3f `p' %10.0f `n'
+}
+}
+display as text "{hline 90}"
+restore
+* ============================================
+* Table D25: Logistic regression: Average marginal effects on five-year survival probability
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+logit Exists_bin ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+margins, dydx(SFACT_bin) post
+restore
+
+* ============================================
+* Table D26: Probit regression: Average marginal effects on five-year survival probability
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+probit Exists_bin ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+margins, dydx(SFACT_bin) post
+restore
+
+* ============================================
+* Figure C4: Predicted five-year survival probability by NACE category
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+logit Exists_bin i.NACE_section
+margins NACE_section
+marginsplot, xdimension(NACE_section) plotopts(connect(none)) plot1opts(mcolor(blue) msize(medium)) ytitle("Pr(Has survived)") xtitle("NACE category") title("Adjusted predictions of NACE category with 95% CIs")
+graph export "margins_nace.png", replace width(2000)
+restore
+
+* ============================================
+* Figure X5: Predicted five-year survival probability by sustainability factor value
+* ============================================
+preserve
+logit Exists_bin i.SFACT
+margins SFACT
+marginsplot, xdimension(SFACT) plotopts(connect(none)) plot1opts(mcolor(blue) msize(medium)) ytitle("Pr(Has survived)") xtitle("Sustainability factor") title("Adjusted predictions of sustainability factor with 95% CIs")
+graph export "margins_sfact.png", replace width(2000)
+restore
+
+* ============================================
+* Figure X8: Median total operating revenue by board chair gender, years 1-5 after registration
+* ============================================
+preserve
+keep if Chair_gender == "Male" | Chair_gender == "Female"
+collapse (median) Y1Rev Y2Rev Y3Rev Y4Rev Y5Rev, by(Chair_gender)
+reshape long Y@Rev, i(Chair_gender) j(Year)
+twoway (line YRev Year if Chair_gender == "Male", lcolor(blue)) (line YRev Year if Chair_gender == "Female", lcolor(red)), legend(order(1 "Male" 2 "Female")) ytitle("Median total operating revenue (NOK)") xtitle("Year after registration")
+graph export "median_total_revenue_gender.png", replace width(2000)
+restore
+
+* ============================================
+* Figure X7: Median total operating revenue by zip code distance between board chair and company location, years 1-5 after registration
+* ============================================
+preserve
+collapse (median) Y1Rev Y2Rev Y3Rev Y4Rev Y5Rev, by(zip_cat)
+reshape long Y@Rev, i(zip_cat) j(Year)
+twoway (line YRev Year if zip_cat == 0, lcolor(blue)) (line YRev Year if zip_cat == 1, lcolor(red)) (line YRev Year if zip_cat == 2, lcolor(green)) (line YRev Year if zip_cat == 3, lcolor(orange)) (line YRev Year if zip_cat == 4, lcolor(purple)), legend(order(1 "Same zip" 2 "Nearby" 3 "Moderate" 4 "Far" 5 "Missing")) ytitle("Median total operating revenue (NOK)") xtitle("Year after registration")
+graph export "median_total_revenue_zip.png", replace width(2000)
+restore
+
+* ============================================
+* Figure X6: Median total operating revenue by employee category, years 1-5 after registration
+* ============================================
+preserve
+collapse (median) Y1Rev Y2Rev Y3Rev Y4Rev Y5Rev, by(emp_cat)
+reshape long Y@Rev, i(emp_cat) j(Year)
+twoway (line YRev Year if emp_cat == 0, lcolor(blue)) (line YRev Year if emp_cat == 1, lcolor(red)) (line YRev Year if emp_cat == 2, lcolor(green)) (line YRev Year if emp_cat == 3, lcolor(orange)), legend(order(1 "No employees" 2 "1-4" 3 "5-19" 4 "20+")) ytitle("Median total operating revenue (NOK)") xtitle("Year after registration")
+graph export "median_total_revenue_employees.png", replace width(2000)
+restore
+
+* ============================================
+* Figure C5: NACE sector effects on operating margin at the 25th, 50th, and 75th percentiles
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.25)
+estimates store q25_nace
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.50)
+estimates store q50_nace
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.75)
+estimates store q75_nace
+coefplot q25_nace q50_nace q75_nace, keep(*.NACE_section) xline(0, lcolor(black) lpattern(dash)) legend(order(1 "25th percentile" 2 "50th percentile" 3 "75th percentile") cols(1) size(small) position(4)) title("NACE sector effects on operating margin") note("Reference category: X Undefined. Controls: equity, employees, zip, gender, sustainability, cohort.") graphregion(margin(l=13 r=12)) ylabel(, labsize(vsmall) angle(0))
+graph export "coefplot_nace_quantiles.png", replace width(2000)
+restore
+* Checking due to misspelt source data
+tab NSR if failed == 1, sort
+count if NSR == "Voluntary discontinuation" & failed == 1
+count if NSR == "Voluntarily discontinuation" & failed == 1
+* Cross-tab check
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+* Distribution of zip_cat within SFACT groups (column percentages):
+tab zip_cat SFACT_bin, col
+* Optional: chi-squared test of independence
+tab zip_cat SFACT_bin, col chi2
+restore
+* ============================================
+* Table D36: Robustness check summary - sustainability coefficient across model specifications
+* ============================================
+preserve
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+* Stricter threshold (SFACT >= 2) - all-cause Cox
+stset surv_time, failure(failed)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_high i.NACE_section i.RegYear
+estimates store D35_high_all
+* Stricter threshold - strict failure Cox
+stset surv_time, failure(failed_strict)
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_high i.NACE_section i.RegYear
+estimates store D35_high_strict
+* Stricter threshold - operating margin (median regression)
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_high i.NACE_section i.RegYear, quantile(0.5)
+estimates store D35_high_qreg
+* Weibull and exponential - all-cause
+stset surv_time, failure(failed)
+streg ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, distribution(weibull)
+estimates store D35_weib_all
+streg ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, distribution(exponential)
+estimates store D35_exp_all
+* Weibull and exponential - strict failure
+stset surv_time, failure(failed_strict)
+streg ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, distribution(weibull)
+estimates store D35_weib_strict
+streg ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, distribution(exponential)
+estimates store D35_exp_strict
+* OLS and Huber on operating margin
+reg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, robust
+estimates store D35_ols
+rreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+estimates store D35_huber
+* Export: Panel A - sustainability indicator alternatives (survival)
+esttab D35_high_all D35_high_strict, eform keep(1.SFACT_high) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("All-cause (Cox)" "Strict failure (Cox)") title("Table D36, Panel A: Stricter threshold (SFACT >= 2) - survival, n = 60,120") tab replace
+* Export: Panel B - parametric survival
+esttab D35_weib_all D35_exp_all D35_weib_strict D35_exp_strict, eform keep(1.SFACT_bin) b(3) ci(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Weibull all-cause" "Exponential all-cause" "Weibull strict" "Exponential strict") title("Table D36, Panel B: Parametric survival, n = 60,120") tab replace
+* Export: Panel C - operating margin alternatives
+esttab D35_high_qreg D35_ols D35_huber, keep(1.SFACT_high 1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Median (SFACT >= 2)" "OLS robust SE" "Huber robust") title("Table D36, Panel C: Operating margin alternatives, n = 39,069") tab replace
+restore
+* ============================================
+* END OF ANALYSIS
+* ============================================
+log close
