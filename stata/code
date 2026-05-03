@@ -1,5 +1,9 @@
-import excel "C:\Users\Audun_local\Desktop\Final\Proff Brreg merge complete - cleaned updated survdates.xlsx", sheet("Main") firstrow
-log using "C:\Users\Audun_local\Desktop\stata_output.log", replace text
+* Replace with your file name and location
+import excel "C:\source_data.xlsx", sheet("Main") firstrow
+
+* Replace with your preferred log location
+log using "C:\stata_output.log", replace text
+
 set more off
 set iterlog off
 set linesize 255
