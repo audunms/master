@@ -26,4 +26,8 @@ Moderate (101-1000)  |   2.284412   .0966439    19.53   0.000     2.102634    2.
                2019  |   1.024031   .0268991     0.90   0.366     .9726437    1.078133
 --------------------------------------------------------------------------------------
 
-Note. Cox proportional hazards model stratified by NACE section. Strict failure. Each NACE has its own baseline hazard (no NACE coefficients shown). Strict failure definition; 10,829 voluntary discontinuations are censored as survivors. n = 60,120; strict failures = 5,850. Post-estimation Schoenfeld residual test (estat phtest): global χ²(12) = 60.65. Individual ρ violations are confined to EQUITY and the ZIP categories; the SUST, EMP, and GENDER coefficients satisfy the proportional-hazards assumption. 
+Note. Stratified Cox proportional hazards model: each NACE section has its own unspecified baseline hazard (no NACE coefficients are estimated and none are reported). 
+Strict failure definition; 10,829 voluntary discontinuations are censored as survivors. n = 60,120; strict failures = 5,850. 
+Post-estimation Schoenfeld residual test (estat phtest): global χ²(12) = 60.65, p < .001. 
+Significant individual ρ violations are confined to EQUITY (ρ = 0.061, p < .001), the Nearby (ρ = -0.043, p = .001) and Far (ρ = -0.042, p = .001) ZIP categories, the Uncertain chair-gender dummy (ρ = 0.028, p = .032), and the 2019 cohort dummy (ρ = 0.045, p < .001). 
+The sustainability indicator (ρ = 0.014, n.s.) and the employee categories (max |ρ| = 0.022, n.s.) satisfy the proportional-hazards assumption.
