@@ -21,5 +21,4 @@ R Human health and social work activities           -0.069    -5.105     0.000  
 S Arts, sports and recreation                       -0.067    -5.007     0.000     38100
 T Other service activities                          -0.068    -5.027     0.000     37937
 ------------------------------------------------------------------------------------------
-
-Note. Coefficients from median regression at the 50th percentile. Dependent variable: aggregated operating margin (years 1-5). Same controls as the main model. NACE P and U excluded.
+Note. Leave-one-out sensitivity for the median regression of operating margin (NACE section excluded in turn). Same controls as the main model. NACE P, U and missing excluded.
