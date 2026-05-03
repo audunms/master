@@ -34,5 +34,41 @@ N Professional, scientific and technical services  |   .8732777   .0287605    -4
                                            RegYear |
                                              2019  |   .9677038   .0150929    -2.10   0.035     .9385699    .9977421
 --------------------------------------------------------------------------------------------------------------------
-						
-Note. Cox proportional hazards model estimating the effect of sustainability factors (SUST_c 0-5) on five-year firm survival, controlling for NACE category and registration year. NACE P, U and missing excluded. n = 60,120. 
+Note. Cox proportional hazards model (all-cause) estimating the effect of sustainability factors (SUST_c 0-5) on five-year firm survival, controlling for NACE category and registration year. NACE P, U and missing excluded. n = 60,120. 
+
+stcox i.SFACT i.NACE_section i.RegYear
+--------------------------------------------------------------------------------------------------------------------
+                                                _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------------------------------+----------------------------------------------------------------
+                                             SFACT |
+                                                1  |   .8136243   .1707282    -0.98   0.326     .5392755    1.227544
+                                                2  |   .8410175    .244212    -0.60   0.551     .4760316    1.485848
+                                                3  |   .6961952    .203533    -1.24   0.215     .3925381    1.234753
+                                                4  |   .5619914   .3281696    -0.99   0.324     .1789281    1.765147
+                                                5  |   1.69e-19          .        .       .            .           .
+                                                   |
+                                      NACE_section |
+              A Agriculture, forestry and fishing  |   1.819927   .2534269     4.30   0.000     1.385234    2.391029
+                          B Mining and extraction  |   1.894505   .6440999     1.88   0.060     .9729743    3.688841
+                                  C Manufacturing  |   3.728914   .3644169    13.47   0.000     3.078907    4.516146
+                     D Electricity and gas supply  |   1.038436   .3810006     0.10   0.918     .5059122    2.131495
+                                E Water and waste  |   2.938519   .8774696     3.61   0.000     1.636634    5.276007
+                                   F Construction  |   7.114208    .508661    27.44   0.000     6.183954    8.184401
+                           G Retail and wholesale  |    5.09092   .3744807    22.12   0.000     4.407406    5.880434
+                          H Transport and storage  |   6.061558   .5303482    20.60   0.000     5.106337    7.195468
+                  I Accommodation and hospitality  |   9.316274   .7123921    29.19   0.000     8.019606     10.8226
+              J Publishing and content production  |    1.60591   .2849317     2.67   0.008     1.134214    2.273774
+   K Telecommunication and information technology  |   2.214434   .2113048     8.33   0.000     1.836707    2.669843
+                          L Finance and insurance  |   .5409408   .0973254    -3.42   0.001     .3801916    .7696565
+                                    M Real estate  |   .5769428   .0542264    -5.85   0.000     .4798759    .6936438
+N Professional, scientific and technical services  |   1.756546   .1444686     6.85   0.000     1.495036    2.063798
+                     O Administration and support  |   4.275625   .3611693    17.20   0.000     3.623241    5.045475
+                                      Q Education  |   1.659761   .2428051     3.46   0.001     1.246017     2.21089
+        R Human health and social work activities  |   1.366808    .181378     2.35   0.019     1.053784    1.772816
+                    S Arts, sports and recreation  |   1.983458   .2582534     5.26   0.000     1.536715    2.560074
+                       T Other service activities  |   4.177691   .4089153    14.61   0.000      3.44842    5.061189
+                                                   |
+                                           RegYear |
+                                             2019  |   .9762941   .0256125    -0.91   0.360     .9273632    1.027807
+--------------------------------------------------------------------------------------------------------------------
+Note. Cox proportional hazards model (strict) estimating the effect of sustainability factors (SUST_c 0-5) on five-year firm survival, controlling for NACE category and registration year. NACE P, U and missing excluded. n = 60,120. 
