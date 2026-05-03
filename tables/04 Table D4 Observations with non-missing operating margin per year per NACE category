@@ -28,4 +28,4 @@
   +----------------------------------------------------------------------------------------------------------+
 
 
-Note. Values represent the percentage of firms where operating margin is calculated, per NACE level 1 group, per year. Sorted by NACE category. Declining percentages over time primarily reflect cumulative firm exit; firms that cease to exist no longer file financial reports and therefore have missing operating margin.
+Note. Share of firms with non-missing operating margin by NACE section and year. Declining percentages over time primarily reflect cumulative firm exit; firms that cease to exist no longer file financial reports and therefore have missing operating margin.
