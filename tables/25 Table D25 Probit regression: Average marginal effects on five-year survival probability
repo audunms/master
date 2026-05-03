@@ -48,7 +48,7 @@ N Professional, scientific and technical services  |  -.1463774   .0241852    -6
                                                    |
                                              _cons |   .1565327   .0569825     2.75   0.006      .044849    .2682165
 --------------------------------------------------------------------------------------------------------------------
-Note. Probit regression of five-year formal survival (Exists_bin) on the same covariate set as the full Cox model. Marginal effects are calculated at the sample means of all covariates. Reference categories: no employees; same zip code; female chair; non-sustainable (SUST = 0); X Undefined for NACE. NACE P and U excluded. N = 60,120. 
+Note. Probit model: average marginal effects on the probability of five-year survival. Same controls as Table 14.
 
 margins, dydx(SFACT_bin) post
 
