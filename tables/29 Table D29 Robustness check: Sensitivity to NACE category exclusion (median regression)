@@ -4,10 +4,9 @@ esttab qreg_M1 qreg_M2_all qreg_M3, keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0
                       (1)             (2)             (3)   
                  Model 1          Model 2        Model 3   
 ------------------------------------------------------------
-1.SFACT_bin        -0.067***       -0.067***       -0.066***
+1.SUST           -0.067***       -0.067***       -0.066***
                   (0.000)         (0.000)         (0.000)   
 ------------------------------------------------------------
-N                   39069           39075           39075   
+n                   39069           39075           39075   
 ------------------------------------------------------------
-
-Note. Median regressions comparing three specifications are run: (1) excluding NACE P, U and missing NACE codes (main model), (2) including all firms regardless of NACE, and (3) excluding the NACE predictor entirely (shown here). Same controls as the main model. * p < .05, ** p < .01, *** p < .001.
+Note. Median regression: SUST coefficient on aggregated operating margin across three NACE specifications (full controls; Missing-NACE category; no NACE), n = 39,069 / 39,075. Same controls as the main model. * p < .05, ** p < .01, *** p < .001.
