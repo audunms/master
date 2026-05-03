@@ -1,1 +1,6 @@
 
+
+Note. Quantile regression coefficients on the binary sustainability indicator (SUST) at eleven quantile levels of the aggregated operating-margin distribution. 
+Coefficients are expressed in decimal form (multiply by 100 for percentage points). 
+All specifications include the full control set (EQUITY, EMP, ZIP, GENDER, NACE, YEAR) and use the same reference categories and exclusions as the main median-regression specification (Table 16). 
+NACE P, U and missing are excluded. n = 39,069. 
