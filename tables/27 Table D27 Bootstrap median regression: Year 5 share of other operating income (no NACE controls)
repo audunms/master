@@ -27,4 +27,5 @@ Moderate (101-1000)  |   .0042552   .0013638     3.12   0.002     .0015821    .0
                      |
                _cons |   .8539179   .0208027    41.05   0.000     .8131421    .8946938
 --------------------------------------------------------------------------------------
+Bootstrap median regression of Year 5 share of other operating income; 200 replications; NACE controls dropped due to non-convergence.
 
