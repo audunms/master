@@ -32,4 +32,4 @@ N Professional, scientific and technical services  |   1.520866    .050324    12
                                              /cut4 |   3.371406   .0291868                      3.314201    3.428611
 --------------------------------------------------------------------------------------------------------------------
 
-Note: Estimates are transformed only in the first equation to odds ratios. NACE P, U and missing excluded.
+Note: Ordered logit predicting zip_cat by SUST. NACE P, U and missing excluded.
