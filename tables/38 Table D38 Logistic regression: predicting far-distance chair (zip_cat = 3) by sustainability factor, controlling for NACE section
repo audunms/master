@@ -29,4 +29,4 @@ N Professional, scientific and technical services  |   1.281752   .0764435     4
                                              _cons |    .083427    .003727   -55.60   0.000     .0764328    .0910611
 --------------------------------------------------------------------------------------------------------------------
 
-Note. NACE U, P and missing excluded.
+Note. Logistic regression predicting Far-distance chair (ZIP = 1001+) by SUST. NACE U, P and missing excluded.
