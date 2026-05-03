@@ -20,3 +20,5 @@ Q Education                                     0.848     0.030
 R Human health and social work activities       0.847     0.027      
 S Arts, sports and recreation                   0.847     0.028      
 T Other service activities                      0.844     0.025       
+------------------------------------------------------------------
+Note. Leave-one-out sensitivity (all-cause exit): SUST hazard ratio when each NACE section is excluded in turn.
