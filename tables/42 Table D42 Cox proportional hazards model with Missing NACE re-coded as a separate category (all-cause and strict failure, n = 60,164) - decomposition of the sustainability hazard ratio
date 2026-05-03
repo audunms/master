@@ -50,3 +50,57 @@ N Professional, scientific and technical services  |   1.113988   .0368747     3
                                              2019  |   1.005684   .0156839     0.36   0.716      .975409    1.036898
 --------------------------------------------------------------------------------------------------------------------
 Note. All-cause Cox: full coefficient table with Missing NACE re-coded as a separate category, n = 60,164.
+
+
+stcox ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
+
+--------------------------------------------------------------------------------------------------------------------
+                                                _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------------------------------+----------------------------------------------------------------
+                                          ln_aksje |   .7482172   .0121133   -17.92   0.000     .7248484    .7723394
+                                                   |
+                                           emp_cat |
+                                              1-4  |   .0275127   .0041252   -23.96   0.000     .0205072    .0369115
+                                             5-19  |   .0131885   .0034123   -16.73   0.000     .0079425    .0218993
+                                              20+  |   .0031821   .0031829    -5.75   0.000      .000448    .0226014
+                                                   |
+                                           zip_cat |
+                                   Nearby (1-100)  |   2.307107   .0851145    22.66   0.000     2.146174    2.480108
+                              Moderate (101-1000)  |   2.284055   .0966174    19.53   0.000     2.102326    2.481493
+                                      Far (1001+)  |   2.455307   .1132373    19.48   0.000     2.243101    2.687588
+                                          Missing  |   4.058223   .1715201    33.14   0.000     3.735597    4.408712
+                                                   |
+                                  Chair_gender_cat |
+                                             Male  |   .9129397   .0393907    -2.11   0.035     .8389097    .9935025
+                                        Uncertain  |   1.596758   .0784692     9.52   0.000     1.450135    1.758205
+                                                   |
+                                       1.SFACT_bin |   .6749305   .0987333    -2.69   0.007     .5066869    .8990387
+                                                   |
+                                      NACE_section |
+              A Agriculture, forestry and fishing  |   2.606487   .3630878     6.88   0.000     1.983726    3.424753
+                          B Mining and extraction  |   2.133431   .7257712     2.23   0.026     1.095238    4.155742
+                                  C Manufacturing  |   4.961144   .4861618    16.34   0.000     4.094202    6.011659
+                     D Electricity and gas supply  |   1.030106   .3760005     0.08   0.935     .5037135    2.106591
+                                E Water and waste  |   3.568499   1.069557     4.24   0.000     1.983178    6.421098
+                                   F Construction  |   9.096823    .655239    30.65   0.000      7.89911    10.47614
+                           G Retail and wholesale  |   5.407883   .4003582    22.80   0.000     4.677468    6.252356
+                          H Transport and storage  |   6.903115   .6070644    21.97   0.000     5.810184    8.201633
+                  I Accommodation and hospitality  |   10.32294   .8015969    30.06   0.000     8.865553     12.0199
+              J Publishing and content production  |   1.742941   .3094518     3.13   0.002     1.230709    2.468368
+   K Telecommunication and information technology  |   2.318267    .221894     8.78   0.000     1.921721    2.796641
+                          L Finance and insurance  |   .6138127   .1104346    -2.71   0.007     .4314111    .8733341
+                                    M Real estate  |   .5832346   .0550841    -5.71   0.000     .4846753    .7018361
+N Professional, scientific and technical services  |   2.123199   .1749364     9.14   0.000     1.806583    2.495305
+                     O Administration and support  |   4.688895    .397455    18.23   0.000     3.971168     5.53634
+              P Public administration and defence  |   1.78e-19          .        .       .            .           .
+                                      Q Education  |   2.235035   .3275858     5.49   0.000     1.676969    2.978816
+        R Human health and social work activities  |   2.031237   .2706207     5.32   0.000     1.564428    2.637338
+                    S Arts, sports and recreation  |   2.485007   .3239703     6.98   0.000     1.924671    3.208476
+                       T Other service activities  |   5.773531   .5705171    17.74   0.000     4.756957     7.00735
+                        U Households as employers  |   5.30e-19          .        .       .            .           .
+                                     Missing NACE  |   1.06e-18          .        .       .            .           .
+                                                   |
+                                           RegYear |
+                                             2019  |    1.02364   .0268865     0.89   0.374     .9722771    1.077717
+--------------------------------------------------------------------------------------------------------------------
+Note. Strict Cox: full coefficient table with Missing NACE re-coded as a separate category, n = 60,164.
