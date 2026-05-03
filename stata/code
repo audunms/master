@@ -1363,7 +1363,7 @@ qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_s
 estimates store q50_nace
 qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.75)
 estimates store q75_nace
-coefplot q25_nace q50_nace q75_nace, keep(*.NACE_section) xline(0, lcolor(black) lpattern(dash)) legend(order(1 "25th percentile" 2 "50th percentile" 3 "75th percentile") cols(1) size(small) position(4)) title("NACE sector effects on operating margin") note("Reference category: X Undefined. Controls: equity, employees, zip, gender, sustainability, cohort.") graphregion(margin(l=13 r=12)) ylabel(, labsize(vsmall) angle(0))
+coefplot (q25_nace, mcolor(blue) msymbol(circle) ciopts(lcolor(blue))) (q50_nace, mcolor(orange) msymbol(triangle) ciopts(lcolor(orange))) (q75_nace, mcolor(green) msymbol(square) ciopts(lcolor(green))),, keep(*.NACE_section) xline(0, lcolor(black) lpattern(dash)) legend(order(1 "25th percentile" 2 "50th percentile" 3 "75th percentile") cols(1) size(small) position(4)) graphregion(margin(l=13 r=12)) ylabel(, labsize(vsmall) angle(0))
 graph export "coefplot_nace_quantiles.png", replace width(2000)
 restore
 * Checking due to misspelt source data
