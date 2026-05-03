@@ -43,5 +43,4 @@ N Professional, scientific and technical services  |   2.328511   .2209176    10
                                                    |
                                              _cons |  -6.004461   .3828797   -15.68   0.000    -6.754891    -5.25403
 --------------------------------------------------------------------------------------------------------------------
-
-Note. Logistic regression with SFACT_bin as dependent variable. Coefficients shown. Controls: log equity, employee category, zip distance, NACE section. N = 60,120. NACE P, U and missing excluded.
+Note. Logistic regression predicting SUST = 1 by chair gender. n = 60,120. NACE P, U and missing excluded.
