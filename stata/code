@@ -696,10 +696,9 @@ qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_s
 estimates store q50
 qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.75)
 estimates store q75
-coefplot q25 q50 q75, keep(1.SFACT_bin) xline(0, lcolor(black) lpattern(dash)) legend(order(1 "25th percentile" 2 "50th percentile" 3 "75th percentile")) title("Sustainability effect at the 25th, 50th, and 75th percentiles") note("Coefficient on SUST from quantile regressions. Controls: EQUITY, EMP, ZIP, GENDER, NACE, cohort.")
+coefplot (q25, mcolor(blue) msymbol(circle) ciopts(lcolor(blue))) (q50, mcolor(orange) msymbol(triangle) ciopts(lcolor(orange))) (q75, mcolor(green) msymbol(square) ciopts(lcolor(green))), keep(1.SFACT_bin) coeflabels(1.SFACT_bin = "SUST=1") xline(0, lcolor(black) lpattern(dash)) legend(order(1 "25th percentile" 2 "50th percentile" 3 "75th percentile")) title("Sustainability effect at the 25th, 50th, and 75th percentiles") note("Coefficient on SUST from quantile regressions. Controls: EQUITY, EMP, ZIP, GENDER, NACE, cohort.")
 graph export "coefplot_sfact_quantiles.png", replace width(2000)
 restore
-
 * ============================================
 * Figure 7: Kaplan-Meier survival estimates by sustainability factor (strict failure definition)
 * ============================================
