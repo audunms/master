@@ -29,4 +29,5 @@ NACE_section                                        |
   Total                                             |  13,193      17,155
 -------------------------------------------------------------------------
 
-Note. Values represent the number of firms, the number of firms where operating margin is calculated, the number of firms where pretax margin is calculated, per NACE level 1 group, for the fifth year in operation. Only companies registered in 2019 are included. Sorted by NACE category.
+Note. Year-5 firm count with non-missing operating and pretax margin, restricted to the 2019 cohort.
+
