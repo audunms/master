@@ -4,9 +4,9 @@
                                 (1)                       (2)   
                           All-cause            Strict failure   
 ----------------------------------------------------------------
-1.SFACT_bin                   0.906                     0.763   
+1.SUST                       0.906                     0.763   
                           [0.775,1.059]             [0.557,1.046]   
 ----------------------------------------------------------------
-N                             56508                     56508   
+n                             56508                     56508   
 ----------------------------------------------------------------
-Exponentiated coefficients; 95% confidence intervals in brackets
+Note. Cleaned sample, missing-zip firms excluded (n = 56,508): all-cause and strict-failure Cox. 95% confidence intervals in brackets.
