@@ -71,4 +71,7 @@ N Professional, scientific and technical services  |   1.756546   .1444686     6
                                            RegYear |
                                              2019  |   .9762941   .0256125    -0.91   0.360     .9273632    1.027807
 --------------------------------------------------------------------------------------------------------------------
-Note. Cox proportional hazards model (strict) estimating the effect of sustainability factors (SUST_c 0-5) on five-year firm survival, controlling for NACE category and registration year. NACE P, U and missing excluded. n = 60,120. 
+Note. Cox proportional hazards model (strict) estimating the effect of sustainability factors (SUST_c 0-5) on five-year firm survival, controlling for NACE category and registration year. 
+n = 60,120; failures = 16,679 (all-cause); strict failures = 5,850. Reference category: SFACT = 0. 
+The strict-failure hazard ratio at SFACT = 5 is reported as 0.000 (CI [0.000, 0.000]) because no strict-failure event occurs among the 6 firms in this category; the value is a numerical artefact of partial-likelihood maximisation at the boundary, not an estimated zero hazard. 
+The Schoenfeld test for the same cell is non-estimable for the same reason. The unstable upper-tail cells are the empirical motivation for using the binary indicator in subsequent analyses. NACE P, U and missing excluded. n = 60,120. 
