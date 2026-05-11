@@ -305,7 +305,7 @@ graph export "kdensity_om.png", replace width(2000)
 * ============================================
 * Table 6: Median aggregated operating margin per NACE category
 * ============================================
-table (NACE_section), statistic(median AggrOM)
+table (NACE_section), statistic(median AggrOM) statistic(frequency)
 * ============================================
 * Table D2: Observations with non-missing operating margin per NACE category
 * ============================================
