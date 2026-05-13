@@ -16,7 +16,7 @@ stcox ln_aksje i.emp_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear
                                                    |
                                        1.SUST      |   .9282248    .069922    -0.99   0.323     .8008169    1.075903
                                                    |
-                                      NAC          |
+                                      NACE          |
               A Agriculture, forestry and fishing  |   1.049998   .0714083     0.72   0.473     .9189674    1.199712
                           B Mining and extraction  |   1.076205   .1919552     0.41   0.681     .7587036    1.526574
                                   C Manufacturing  |   1.512914   .0804487     7.79   0.000     1.363175      1.6791
@@ -40,5 +40,4 @@ N Professional, scientific and technical services  |   1.211751   .0400411     5
                                            YEAR    |
                                              2019  |   .9902064   .0154639    -0.63   0.529     .9603568    1.020984
 --------------------------------------------------------------------------------------------------------------------
-
 Note. All-cause Cox decomposition: SUST hazard ratio with vs without ZIP as a control. NACE P, U and missing excluded. 
