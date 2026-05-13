@@ -3,9 +3,9 @@ stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje
 --------------------------------------------------------------------------------------------------------------------
                                                 _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
 ---------------------------------------------------+----------------------------------------------------------------
-                                       1.SFACT_bin |   .6979583    .102126    -2.46   0.014      .523939    .9297758
+                                       1.SUST      |   .6979583    .102126    -2.46   0.014      .523939    .9297758
                                                    |
-                                      NACE_section |
+                                      NACE         |
               A Agriculture, forestry and fishing  |   2.053436   .2860494     5.17   0.000     1.562811    2.698087
                           B Mining and extraction  |   1.488334   .5062391     1.17   0.242     .7641421    2.898855
                                   C Manufacturing  |   3.133552   .3068933    11.66   0.000     2.586259     3.79666
@@ -26,19 +26,19 @@ N Professional, scientific and technical services  |   1.413377   .1163899     4
                     S Arts, sports and recreation  |    1.70211   .2219237     4.08   0.000     1.318277    2.197701
                        T Other service activities  |   2.778421   .2748364    10.33   0.000     2.288752    3.372853
                                                    |
-                                           RegYear |
+                                           YEAR    |
                                              2019  |   .9902632   .0259887    -0.37   0.709     .9406142    1.042533
                                                    |
-                                           zip_cat |
+                                           ZIP     |
                                    Nearby (1-100)  |   2.325372   .0860944    22.79   0.000     2.162607    2.500387
                               Moderate (101-1000)  |   2.464913   .1045631    21.27   0.000     2.268262    2.678614
                                       Far (1001+)  |   2.653321   .1228107    21.08   0.000     2.423212    2.905282
                                           Missing  |   5.392332    .223842    40.59   0.000     4.970983    5.849396
                                                    |
-                                  Chair_gender_cat |
+                                       GENDER      |
                                              Male  |   .9603308   .0414935    -0.94   0.349     .8823533      1.0452
                                         Uncertain  |    1.72741   .0842657    11.21   0.000     1.569902    1.900721
                                                    |
-                                          ln_aksje |   .7005122   .0115771   -21.54   0.000     .6781851    .7235744
+                                          EQUITY   |   .7005122   .0115771   -21.54   0.000     .6781851    .7235744
 --------------------------------------------------------------------------------------------------------------------
 Note. Nested strict-failure Cox models showing the SUST coefficient evolution from M1 (SUST only) through M7 (full specification, equivalent to Table 13). NACE P, U and missing excluded.
