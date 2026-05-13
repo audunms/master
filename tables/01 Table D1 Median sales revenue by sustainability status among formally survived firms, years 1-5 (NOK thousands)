@@ -1,6 +1,6 @@
 collapse (median) Y1SRev Y2SRev Y3SRev Y4SRev Y5SRev, by(SFACT_bin)
 
-    SUST   Y1SRev   Y2SRev   Y3SRev   Y4SRev   Y5SRev  
+          SUST   Y1SRev   Y2SRev   Y3SRev   Y4SRev   Y5SRev  
            0      960     1074     1242     1327   1339.5  
            1    398.5      513      847     1053   1420.5  
 
