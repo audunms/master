@@ -1,3 +1,4 @@
+keep if RegYear == 2019
 table (NACE_section), statistic(count Y5OM) statistic(count FOMY52019)
 
 -------------------------------------------------------------------------
