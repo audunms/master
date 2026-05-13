@@ -3,9 +3,9 @@ stcox i.SFACT_bin i.NACE_section i.RegYear
 --------------------------------------------------------------------------------------------------------------------
                                                 _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
 ---------------------------------------------------+----------------------------------------------------------------
-                                       1.SFACT_bin |   .9588412   .0719313    -0.56   0.575     .8277332    1.110716
+                                       1.SUST      |   .9588412   .0719313    -0.56   0.575     .8277332    1.110716
                                                    |
-                                      NACE_section |
+                                      NACE         |
               A Agriculture, forestry and fishing  |   .7908746   .0537392    -3.45   0.001     .6922601     .903537
                           B Mining and extraction  |   .7992416   .1424992    -1.26   0.209     .5635271    1.133552
                                   C Manufacturing  |   .9843475   .0522456    -0.30   0.766     .8870942    1.092263
@@ -26,7 +26,7 @@ N Professional, scientific and technical services  |   .8736651   .0287687    -4
                     S Arts, sports and recreation  |   .8613053   .0542551    -2.37   0.018     .7612695    .9744864
                        T Other service activities  |   .8960261   .0520954    -1.89   0.059     .7995238    1.004176
                                                    |
-                                           RegYear |
+                                           YEAR    |
                                              2019  |   .9677928   .0150939    -2.10   0.036     .9386569    .9978331
 --------------------------------------------------------------------------------------------------------------------
 Note. Nested all-cause Cox models showing the SUST coefficient evolution from M1 (SUST only) through M7 (full specification, equivalent to Table 14). NACE P, U and missing excluded.
