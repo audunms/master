@@ -1,7 +1,7 @@
 table (NACE_section), statistic(count AggrOM) statistic(count NACE_section)
 
 ----------------------------------------------------------------------------
-                                                    |  AggrOM       NACE
+                                                    |    OM            NACE
 ----------------------------------------------------+-----------------------
 NACE category                                       |                       
   X Undefined                                       |   1,504          7,043
@@ -28,4 +28,4 @@ NACE category                                       |
   U Households as employers                         |       0              1
   Total                                             |  39,075         60,138
 ----------------------------------------------------------------------------
-Note. Number of firms with non-missing aggregated operating margin, and number of firms, per NACE section.
+Note. Number of firms with non-missing aggregated operating margin (OM), and number of firms, per NACE section.
