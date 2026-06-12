@@ -549,6 +549,14 @@ estimates store M6
 stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje i.emp_cat
 estat phtest, detail
 estimates store M7
+
+* ============================================
+* Table 13: Complement - Fine Gray - NOT IN THESIS
+* ============================================
+stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat ln_aksje i.emp_cat
+estat phtest, detail
+estimates store M7
+
 * ============================================
 * Output: SFACT_bin coefficient progression
 * ============================================
@@ -636,14 +644,13 @@ estimates store qreg_M1
 restore
 
 * ============================================
-* Table 15 robustness: Median regression: Aggregated operating margin (full specification - only survivors)
+* Table 15 robustness: Median regression: Aggregated operating margin (full specification - only survivors) NOT IN THESIS
 * ============================================
 preserve
 drop if (failed != 0)
 drop if missing(NACE_section)
 drop if NACE_section == 16 | NACE_section == 21
-qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
-estimates store qreg_M1
+bsqreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5) reps(200)
 restore
 
 * ============================================
@@ -1062,6 +1069,15 @@ esttab AC7 cox_M2_all cox_M3_all using tableA19_A21_allcause_NACE_robustness.tab
 
 esttab qreg_M1 qreg_M2_all qreg_M3, keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 39,069)" "Model 2 (Missing NACE category, n = 39,075)" "Model 3 (no NACE, n = 39,075)") title("Table D30: Median regression sustainability coefficient on aggregated operating margin across NACE specifications")
 esttab qreg_M1 qreg_M2_all qreg_M3 using tableX29_allcause_NACE_robustness_median.tab, keep(1.SFACT_bin) b(3) p(3) star(* 0.05 ** 0.01 *** 0.001) mtitles("Model 1 (NACE controls, n = 39,069)" "Model 2 (Missing NACE category, n = 39,075)" "Model 3 (no NACE, n = 39,075)") title("Table D30: Median regression sustainability coefficient across NACE specifications") tab replace
+* ============================================
+* Table D30 Model 3 robustness - NOT IN THESIS
+* ============================================
+preserve
+drop if (failed != 0)
+drop if missing(NACE_section)
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.RegYear, quantile(0.5)
+restore
+
 * ============================================
 * Table C9: Median regression: Pretax margin (Year 5, 2019 cohort)
 * ============================================
