@@ -636,6 +636,17 @@ estimates store qreg_M1
 restore
 
 * ============================================
+* Table 15 robustness: Median regression: Aggregated operating margin (full specification - only survivors)
+* ============================================
+preserve
+drop if (failed != 0)
+drop if missing(NACE_section)
+drop if NACE_section == 16 | NACE_section == 21
+qreg AggrOM ln_aksje i.emp_cat i.zip_cat i.Chair_gender_cat i.SFACT_bin i.NACE_section i.RegYear, quantile(0.5)
+estimates store qreg_M1
+restore
+
+* ============================================
 * Table 16: Median regression: Five-year revenue growth (full specification)
 * ============================================
 preserve
