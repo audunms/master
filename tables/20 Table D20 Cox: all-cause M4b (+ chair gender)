@@ -1,42 +1,29 @@
-stcox i.SFACT_bin i.NACE_section i.RegYear i.zip_cat i.Chair_gender_cat
-
---------------------------------------------------------------------------------------------------------------------
-                                                _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
----------------------------------------------------+----------------------------------------------------------------
-                                       1.SUST      |   .8783075   .0658669    -1.73   0.084       .75825    1.017374
-                                                   |
-                                      NACE         |
-              A Agriculture, forestry and fishing  |   .7978959   .0542254    -3.32   0.001     .6983903     .911579
-                          B Mining and extraction  |   .6490351   .1157859    -2.42   0.015     .4575266    .9207039
-                                  C Manufacturing  |   .8364192   .0444945    -3.36   0.001     .7536039    .9283353
-                     D Electricity and gas supply  |   .5860433   .0808151    -3.88   0.000     .4472489    .7679095
-                                E Water and waste  |   .7635856   .1333656    -1.54   0.123     .5422373    1.075291
-                                   F Construction  |   1.409985   .0424065    11.42   0.000     1.329272    1.495599
-                           G Retail and wholesale  |   1.078712   .0338658     2.41   0.016     1.014337    1.147172
-                          H Transport and storage  |   1.206436   .0563375     4.02   0.000     1.100919    1.322067
-                  I Accommodation and hospitality  |   1.200289   .0471968     4.64   0.000      1.11126    1.296451
-              J Publishing and content production  |   .7225805   .0587235    -4.00   0.000     .6161833    .8473496
-   K Telecommunication and information technology  |   .8274198   .0351012    -4.47   0.000     .7614052    .8991579
-                          L Finance and insurance  |   .4396894   .0301525   -11.98   0.000     .3843911     .502943
-                                    M Real estate  |   .5037004   .0165005   -20.93   0.000     .4723764    .5371015
-N Professional, scientific and technical services  |   .7890321   .0260361    -7.18   0.000     .7396175    .8417482
-                     O Administration and support  |   1.072977   .0434799     1.74   0.082     .9910547    1.161672
-                                      Q Education  |   .8455811   .0536556    -2.64   0.008     .7466947    .9575634
-        R Human health and social work activities  |   .7733701   .0412003    -4.82   0.000     .6966918    .8584878
-                    S Arts, sports and recreation  |   .7654621    .048304    -4.24   0.000     .6764086    .8662401
-                       T Other service activities  |   .7001496   .0410854    -6.07   0.000     .6240819     .785489
-                                                   |
-                                           YEAR    |
-                                             2019  |   .9839798   .0153316    -1.04   0.300     .9543846    1.014493
-                                                   |
-                                           ZIP     |
-                                   Nearby (1-100)  |   1.801829   .0369622    28.70   0.000     1.730822     1.87575
-                              Moderate (101-1000)  |   1.923345   .0458129    27.46   0.000     1.835617    2.015266
-                                      Far (1001+)  |   2.025652   .0518139    27.60   0.000     1.926603    2.129795
-                                          Missing  |   2.685919   .0764887    34.69   0.000     2.540111    2.840097
-                                                   |
-                                      GENDER       |
-                                             Male  |   .8505354    .019475    -7.07   0.000     .8132088    .8895752
-                                        Uncertain  |   1.168016   .0352064     5.15   0.000     1.101012    1.239098
---------------------------------------------------------------------------------------------------------------------
-Note. Nested all-cause Cox models showing the SUST coefficient evolution from M1 (SUST only) through M7 (full specification, equivalent to Table 14). NACE P, U and missing excluded.
+Variable	Hazard ratio	Std. err.	z	P>|z|	95% CI lower	95% CI upper
+1.SUST	0.9677577	0.0726445	-0.44	0.662	0.8353557	1.121145
+NACE						
+A Agriculture, forestry and fishing	0.7919527	0.0538204	-3.43	0.001	0.6931902	0.9047865
+B Mining and extraction	0.8073029	0.1439489	-1.2	0.23	0.5691937	1.14502
+C Manufacturing	0.9647162	0.0512107	-0.68	0.499	0.8693901	1.070495
+D Electricity and gas supply	0.7659501	0.1057131	-1.93	0.053	0.5844149	1.003875
+E Water and waste	0.9332636	0.1629453	-0.4	0.692	0.6628066	1.31408
+F Construction	1.497793	0.0449846	13.45	0	1.41217	1.588608
+G Retail and wholesale	1.286878	0.0400459	8.11	0	1.210736	1.36781
+H Transport and storage	1.350551	0.062987	6.44	0	1.232573	1.479822
+I Accommodation and hospitality	1.446437	0.0564119	9.46	0	1.339992	1.561338
+J Publishing and content production	0.8388196	0.06811	-2.16	0.03	0.715407	0.9835218
+K Telecommunication and information technology	0.9677773	0.0409039	-0.77	0.438	0.8908379	1.051362
+L Finance and insurance	0.4384007	0.0300951	-12.01	0	0.3832114	0.5015382
+M Real estate	0.5831283	0.0189292	-16.62	0	0.5471833	0.6214345
+N Professional, scientific and technical services	0.8589723	0.0282986	-4.61	0	0.8052608	0.9162664
+O Administration and support	1.201952	0.0486085	4.55	0	1.110359	1.301101
+Q Education	0.9396772	0.0595595	-0.98	0.326	0.8299025	1.063972
+R Human health and social work activities	0.9008425	0.0478089	-1.97	0.049	0.8118477	0.999593
+S Arts, sports and recreation	0.851513	0.0536623	-2.55	0.011	0.7525729	0.9634605
+T Other service activities	0.8270382	0.0483187	-3.25	0.001	0.7375562	0.9273763
+YEAR						
+2019	0.9672823	0.0150838	-2.13	0.033	0.9381659	0.9973024
+GENDER						
+Male	0.8812419	0.0201744	-5.52	0	0.8425748	0.9216835
+Uncertain	1.423001	0.0414616	12.11	0	1.344015	1.50663
+						
+Note. Nested all-cause Cox models showing the SUST coefficient evolution from M1 (SUST only) through M7 (full specification, equivalent to Table 14). NACE P, U and missing excluded.						
